@@ -136,6 +136,9 @@ esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
         case MQTT_EVENT_PUBLISHED:
             ESP_LOGI(TAG, "MQTT_EVENT_PUBLISHED, msg_id=%d", event->msg_id);
             break;
+        case MQTT_EVENT_BEFORE_CONNECT:
+            ESP_LOGI(TAG, "MQTT_EVENT_BEFORE_CONNECT, msg_id=%d", event->msg_id);
+            break;
         case MQTT_EVENT_DATA:
             //ESP_LOGI(TAG, "MQTT_EVENT_DATA");
 
@@ -155,7 +158,7 @@ esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
 
 static char * mqtt_client_id()
 {
-    char *buf = calloc(1, 6);
+    char *buf = calloc(1, 14);
     wifi_get_mac(buf);
     sprintf(buf, MQTT_CLIENT_ID_MASK, buf[3], buf[4], buf[5]);
     ESP_LOGI(TAG, "mqtt client id: %s", buf);
@@ -332,7 +335,7 @@ void mqtt_publish_device_rssi(){
 }
 
 void mqtt_set_device_name(const char *dev_name){
-    memset(_mqtt_dev_name, 0, MQTT_DEICE_NAME_LENGTH);
+    memset(_mqtt_dev_name, 0, MQTT_DEICE_NAME_LENGTH + 1);
     strcpy(_mqtt_dev_name, _mqtt_cfg.base_topic);
     //strcat(_mqtt_dev_name, "/");
     strcat(_mqtt_dev_name, dev_name);

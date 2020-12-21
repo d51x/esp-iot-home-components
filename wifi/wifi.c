@@ -257,14 +257,14 @@ void wifi_init_ap(void) {
         },
     };
     
-    strncpy((char *) ap_config.ap.ssid, ESP_WIFI_AP_SSID, strlen(ESP_WIFI_AP_SSID));
+    strncpy((char *) ap_config.ap.ssid, ESP_WIFI_AP_SSID, strlen(ESP_WIFI_AP_SSID)+1);
     ap_config.ap.ssid_len = strlen(ESP_WIFI_AP_SSID);
 
     if (strlen(ESP_WIFI_AP_PASS) == 0) {
         memset(ap_config.ap.password, 0, sizeof(ap_config.ap.password));
         ap_config.ap.authmode = WIFI_AUTH_OPEN;
     } else {
-        strncpy((char *) ap_config.ap.password, ESP_WIFI_AP_PASS, strlen(ESP_WIFI_AP_PASS));
+        strncpy((char *) ap_config.ap.password, ESP_WIFI_AP_PASS, strlen(ESP_WIFI_AP_PASS) + 1);
         ap_config.ap.authmode = WIFI_AUTH_WPA_WPA2_PSK;
     }
 
