@@ -1,0 +1,248 @@
+
+static void test1(mcp23017_handle_t dev_h)
+{
+        ESP_LOGI(TAG, "0..15 On step by step");
+        uint16_t data = 0;
+        for (uint8_t i = 0; i < 16; i++ )
+        {
+            ESP_LOGI(TAG, "Set bit %d to 1", i);
+            BIT_SET( data, i);
+            mcp23017_write_io( dev_h, data);
+
+            vTaskDelay( 1000 / portTICK_RATE_MS );
+        }
+
+    ESP_LOGI(TAG, "0..15 OFF step by step");
+        for (uint8_t i = 0; i < 16; i++ )
+        {
+            ESP_LOGI(TAG, "Set bit %d to 0", i);
+            BIT_CLEAR( data, i);
+            mcp23017_write_io( dev_h, data);
+
+            vTaskDelay( 1000 / portTICK_RATE_MS );
+        }
+}
+
+static void test2(mcp23017_handle_t dev_h)
+{
+        uint16_t data = 0;
+        ESP_LOGI(TAG, "Reset");
+        mcp23017_set_directions(dev_h, data);
+        mcp23017_set_interrupts(dev_h, data);
+        mcp23017_set_defaults(dev_h, data);
+        mcp23017_set_conditions(dev_h, data);
+        mcp23017_set_inversions(dev_h, data);
+        mcp23017_write_io(dev_h, data);
+
+        ESP_LOGI(TAG, "Set inputs 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1");
+        
+
+        data = 0b0101010101010101;
+        mcp23017_set_directions(dev_h, data);
+
+        data = 0;
+        for (uint8_t i = 0; i < 16; i++ )
+        {
+            ESP_LOGI(TAG, "Set bit %d to 1", i);
+            BIT_SET( data, i);
+            mcp23017_write_io( dev_h, data);
+
+
+            vTaskDelay( 1000 / portTICK_RATE_MS );
+        }
+
+        for (uint8_t i = 0; i < 16; i++ )
+        {
+            ESP_LOGI(TAG, "Set bit %d to 0", i);
+            BIT_CLEAR( data, i);
+            mcp23017_write_io( dev_h, data);
+
+            vTaskDelay( 1000 / portTICK_RATE_MS );
+        }
+
+        ESP_LOGI(TAG, "Set inputs 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0");
+        
+
+        data = 0b1010101010101010;
+        mcp23017_set_directions(dev_h, data); 
+
+        data = 0;
+        for (uint8_t i = 0; i < 16; i++ )
+        {
+            ESP_LOGI(TAG, "Set bit %d to 1", i);
+            BIT_SET( data, i);
+            mcp23017_write_io( dev_h, data);
+
+
+            vTaskDelay( 1000 / portTICK_RATE_MS );
+        }
+
+        for (uint8_t i = 0; i < 16; i++ )
+        {
+            ESP_LOGI(TAG, "Set bit %d to 0", i);
+            BIT_CLEAR( data, i);
+            mcp23017_write_io( dev_h, data);
+
+            vTaskDelay( 1000 / portTICK_RATE_MS );
+        }
+
+
+        ESP_LOGI(TAG, "Set inputs 1 1 1 1 0 0 1 1 0 0 1 1 0 0 1 1");
+        
+
+        data = 0b1111001100110011;
+        mcp23017_set_directions(dev_h, data); 
+
+        data = 0;
+        for (uint8_t i = 0; i < 16; i++ )
+        {
+            ESP_LOGI(TAG, "Set bit %d to 1", i);
+            BIT_SET( data, i);
+            mcp23017_write_io( dev_h, data);
+
+
+            vTaskDelay( 1000 / portTICK_RATE_MS );
+        }
+
+        for (uint8_t i = 0; i < 16; i++ )
+        {
+            ESP_LOGI(TAG, "Set bit %d to 0", i);
+            BIT_CLEAR( data, i);
+            mcp23017_write_io( dev_h, data);
+
+            vTaskDelay( 1000 / portTICK_RATE_MS );
+        }
+
+}
+
+static void test3(mcp23017_handle_t dev_h)
+{
+        uint16_t data = 0;
+        ESP_LOGI(TAG, "Reset");
+        mcp23017_set_directions(dev_h, data);
+        mcp23017_set_interrupts(dev_h, data);
+        mcp23017_set_defaults(dev_h, data);
+        mcp23017_set_conditions(dev_h, data);
+        mcp23017_set_inversions(dev_h, data);
+        mcp23017_write_io(dev_h, data);
+
+        ESP_LOGI(TAG, "Set inversion 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1");
+        
+
+        data = 0b0101010101010101;
+        mcp23017_set_inversions(dev_h, data);
+vTaskDelay( 5000 / portTICK_RATE_MS );
+
+//ESP_LOGI(TAG, "Write 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1");
+//        data = 0b0101010101010101;
+//        mcp23017_write_io(dev_h, data);
+//vTaskDelay( 5000 / portTICK_RATE_MS );
+
+        data = 0;
+        for (uint8_t i = 0; i < 16; i++ )
+        {
+            ESP_LOGI(TAG, "Set bit %d to 1", i);
+            BIT_SET( data, i);
+            mcp23017_write_io( dev_h, data);
+
+
+            vTaskDelay( 1000 / portTICK_RATE_MS );
+        }
+
+        for (uint8_t i = 0; i < 16; i++ )
+        {
+            ESP_LOGI(TAG, "Set bit %d to 0", i);
+            BIT_CLEAR( data, i);
+            mcp23017_write_io( dev_h, data);
+
+            vTaskDelay( 1000 / portTICK_RATE_MS );
+        }
+
+}
+
+static void test4(mcp23017_handle_t dev_h)
+{
+    // inputs
+        uint16_t data = 0;
+
+            mcp23017_read_io( dev_h, &data);
+
+            ESP_LOGI(TAG, "Inputs: %4d \t 0x%04X \t " BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN, data, data, BYTE_TO_BINARY(data >> 8), BYTE_TO_BINARY(data));
+            
+            vTaskDelay( 20 / portTICK_RATE_MS );
+
+}
+
+static void test5(mcp23017_handle_t dev_h)
+{
+        // interrupts
+        uint16_t data = 0;
+
+            mcp23017_read_io( dev_h, &data);
+
+            ESP_LOGI(TAG, "Inputs: %4d \t 0x%04X \t " BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN, data, data, BYTE_TO_BINARY(data >> 8), BYTE_TO_BINARY(data));
+            
+            vTaskDelay( 20 / portTICK_RATE_MS );
+
+}
+
+void mcp23017_test_task_cb(void *arg)
+{
+    ESP_LOGI(TAG, __func__);
+    mcp23017_handle_t dev_h = (mcp23017_handle_t)arg;
+
+
+        uint16_t data = 0;
+        ESP_LOGI(TAG, "Reset");
+        mcp23017_set_directions(dev_h, data);
+        mcp23017_set_interrupts(dev_h, data);
+        mcp23017_set_defaults(dev_h, data);
+        mcp23017_set_conditions(dev_h, data);
+        mcp23017_set_inversions(dev_h, data);
+        mcp23017_write_io(dev_h, data);
+
+        ESP_LOGI(TAG, "Set inputs 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1");
+
+        //data = 0b1111111111111111;
+        //mcp23017_set_directions(dev_h, data);
+
+        //data = 0b1111111111111111;  
+        //mcp23017_set_inversions(dev_h, data);
+
+        data = 0b1111111100000000;
+        mcp23017_set_defaults(dev_h, data);
+
+        //interrupts
+        // test5(dev_h);
+
+        data = 0b1111111100000000;
+        mcp23017_set_interrupts(dev_h, data);
+
+        data = 0b1111111100000000;
+        mcp23017_set_directions(dev_h, data);
+
+         data = 0;
+        mcp23017_set_conditions(dev_h, data);  
+
+        data = 0b1111111100000000;
+        mcp23017_set_defaults(dev_h, data);  
+
+        mcp23017_t *dev = (mcp23017_t *) dev_h;
+  
+    while ( 1 ) 
+    {
+        //test5(dev_h);
+//int level = gpio_get_level( dev->int_b_pin );
+//ESP_LOGI(TAG, "gpio %d level %d", dev->int_b_pin, level);
+
+        vTaskDelay( 1000 / portTICK_RATE_MS );
+    }        
+}
+
+void mcp23017_test_task(mcp23017_handle_t dev_h)
+{
+    ESP_LOGI(TAG, __func__);
+    ESP_LOGI(TAG, "mcp23017_h is %p", dev_h);
+    xTaskCreate(mcp23017_test_task_cb, "mcp23017_test", 2048, dev_h, 15, NULL);
+}
+

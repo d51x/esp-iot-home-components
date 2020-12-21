@@ -1,0 +1,10 @@
+if(CONFIG_COMPONENT_I2C)
+    set(COMPONENT_SRCS "i2c_http.c" "i2c_bus.c i2c_http.c")
+    set(COMPONENT_ADD_INCLUDEDIRS ". include")
+else()
+    set(COMPONENT_ADD_INCLUDEDIRS "")
+    set(COMPONENT_SRCS "")
+endif()
+
+set(COMPONENT_REQUIRES)
+register_component()
