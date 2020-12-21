@@ -121,30 +121,6 @@ void i2c_http_process_params(httpd_req_t *req, void *args)
     } 
 }
 
-/*
-esp_err_t i2c_get_handler(httpd_req_t *req)
-{
-    ESP_LOGI(TAG, "function %s started...", __func__ );
-
-
-    ESP_LOGI(TAG, "show page");
-
-    char page[PAGE_DEFAULT_BUFFER_SIZE] = "";    
-
-
-
-    strncpy(page, "i2c", PAGE_DEFAULT_BUFFER_SIZE);
-    sprintf(page + strlen(page), "Страница i2c");
-
-    show_http_page( req, page);
-
-    httpd_resp_set_type(req, HTTPD_TYPE_TEXT);
-	httpd_resp_send(req, page, strlen(page)); 
-     
-    return ESP_OK;
-}
-*/
-
 #ifdef CONFIG_COMPONENT_I2C_SCANNER
 const char *i2c_devices_not_found ICACHE_RODATA_ATTR = "Устройства не найдены";
 

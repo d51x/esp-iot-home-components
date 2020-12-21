@@ -27,9 +27,6 @@
 #define STR_YES "ДА"
 #define STR_NO "НЕТ"
 
-#define PAGE_MAIN_BUFFER_SIZE       CONFIG_HTTP_PAGE_SIZE //1024*6
-#define PAGE_DEFAULT_BUFFER_SIZE    CONFIG_HTTP_PAGE_SIZE //1024*6
-
 typedef struct http_args{
     void *dev;
     httpd_req_t *req;
