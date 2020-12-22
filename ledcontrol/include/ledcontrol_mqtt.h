@@ -24,7 +24,7 @@ typedef struct ledcontrol_mqtt {
     #endif
 } ledcontrol_mqtt_t;
 
-void ledcontrol_mqtt_periodic_send_cb(char *buf, void *args);
+void ledcontrol_mqtt_periodic_send_cb(char **buf, void *args);
 void ledcontrol_mqtt_recv_cb(char *buf, void *args);
 void ledcontrol_mqtt_init(ledcontrol_handle_t dev_h);
 

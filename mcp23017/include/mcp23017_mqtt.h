@@ -22,7 +22,7 @@ typedef struct mcp23017_mqtt {
     #endif
 } mcp23017_mqtt_t;
 
-void mcp23017_mqtt_periodic_send_cb(char *buf, void *args);
+void mcp23017_mqtt_periodic_send_cb(char **buf, void *args);
 void mcp23017_mqtt_recv_cb(char *buf, void *args);
 void mcp23017_mqtt_init(mcp23017_handle_t dev_h);
 

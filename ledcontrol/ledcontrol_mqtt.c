@@ -19,15 +19,15 @@ void ledcontrol_mqtt_periodic_send_cb(char **buf, void *args)
     itoa(value, *buf, 10);
 }
 
-static esp_err_t ledcontrol_set_duty_update(ledcontrol_mqtt_t *p)
+static esp_err_t ledcontrol_set_duty_update(ledcontrol_mqtt_t *p, uint8_t duty)
 {
     esp_err_t err =  ESP_FAIL;
-    if ( value >= 0 && value <= MAX_DUTY ) 
+    if ( duty >= 0 && duty <= MAX_DUTY ) 
     {
         ledcontrol_handle_t dev_h = p->dev_h;
         ledcontrol_t *ledc = (ledcontrol_t *)dev_h;
         ledcontrol_channel_t *ch = ledc->channels + p->channel;
-        err = ledc->set_duty( ch, value );
+        err = ledc->set_duty( ch, duty );
         ledc->update();
     } 
     return err;
@@ -41,11 +41,11 @@ void ledcontrol_mqtt_recv_cb(char *buf, void *args)
     #ifdef CONFIG_MQTT_TOPIC_SEND_RECV
     if ( p->prev != value )
         {
-            if ( ledcontrol_set_duty_update(p) == ESP_OK )
+            if ( ledcontrol_set_duty_update(p, value) == ESP_OK )
                 p->prev = value;       
         }
     #else
-        ledcontrol_set_duty_update(p);
+        ledcontrol_set_duty_update(p, value);
     #endif 
 }
 

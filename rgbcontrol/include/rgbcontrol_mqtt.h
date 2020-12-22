@@ -17,7 +17,7 @@ typedef struct rgbcontrol_mqtt {
     #endif
 } rgbcontrol_mqtt_t;
 
-void rgbcontrol_mqtt_periodic_send_cb(char *buf, void *args);
+
 void rgbcontrol_mqtt_recv_cb(char *buf, void *args);
 void rgbcontrol_mqtt_init(rgbcontrol_handle_t dev_h);
 

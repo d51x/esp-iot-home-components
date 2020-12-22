@@ -8,9 +8,6 @@
 
 #ifdef CONFIG_SENSOR_PZEM004_T
 
-
-
-void pzem_mqtt_periodic_send_cb(char *buf, void *args);
 void pzem_mqtt_init();
 
 #endif
