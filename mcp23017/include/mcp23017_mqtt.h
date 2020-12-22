@@ -6,12 +6,12 @@
 #include "mcp23017.h"
 #include "mqtt_cl.h"
 
-#define MCP23017_MQTT_SEND_TOPIC "mcp23017/gpio"
+#define MCP23017_MQTT_SEND_TOPIC "mcp23017/gpio%d"
 
 #ifdef CONFIG_MQTT_TOPIC_SEND_RECV
-#define MCP23017_MQTT_RECV_TOPIC MCP23017_MQTT_SEND_TOPIC
+    #define MCP23017_MQTT_RECV_TOPIC MCP23017_MQTT_SEND_TOPIC
 #else
-#define MCP23017_MQTT_RECV_TOPIC "mcp23017/set/gpio"
+    #define MCP23017_MQTT_RECV_TOPIC "mcp23017/gpio%d/set"
 #endif
 
 typedef struct mcp23017_mqtt {

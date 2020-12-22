@@ -23,16 +23,13 @@ void mcp23017_mqtt_recv_cb(char *buf, void *args)
     uint8_t value = atoi( buf );
 
     #ifdef CONFIG_MQTT_TOPIC_SEND_RECV
-    if ( p->prev != value )
-    {
-    #endif
-        
-    esp_err_t err =  mcp23017_write_pin( p->dev_h, p->pin, value);
-
-    #ifdef CONFIG_MQTT_TOPIC_SEND_RECV    
-        if ( err == ESP_OK )
-            p->prev = value;       
-    }
+        if ( p->prev != value )
+        {
+            if ( mcp23017_write_pin( p->dev_h, p->pin, value) == ESP_OK )
+                p->prev = value;       
+        }
+    #else
+        mcp23017_write_pin( p->dev_h, p->pin, value);
     #endif 
 }
 
@@ -69,10 +66,10 @@ void mcp23017_mqtt_init(mcp23017_handle_t dev_h)
         p->dev_h = dev_h;
         p->pin = i;
 
-        sprintf(t, "%s%d", MCP23017_MQTT_SEND_TOPIC, i);
+        sprintf(t, MCP23017_MQTT_SEND_TOPIC, i);
         mqtt_add_periodic_publish_callback( t, mcp23017_mqtt_periodic_send_cb, (mcp23017_mqtt_t *)p);
 
-        sprintf(t, "%s%d", MCP23017_MQTT_RECV_TOPIC, i);
+        sprintf(t, MCP23017_MQTT_RECV_TOPIC, i);
         mqtt_add_receive_callback(t, 1, mcp23017_mqtt_recv_cb, (mcp23017_mqtt_t *)p);
         //free(p);    make after in delete callback
     }    

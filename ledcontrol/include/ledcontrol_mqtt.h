@@ -8,12 +8,12 @@
 
 #ifdef CONFIG_LED_CONTROLLER
 
-#define LEDCONTROL_MQTT_SEND_TOPIC "ledc/ch"
+#define LEDCONTROL_MQTT_SEND_TOPIC "ledc/ch%d"
 
 #ifdef CONFIG_MQTT_TOPIC_SEND_RECV
 #define LEDCONTROL_MQTT_RECV_TOPIC LEDCONTROL_MQTT_SEND_TOPIC
 #else
-#define LEDCONTROL_MQTT_RECV_TOPIC "ledc/set/ch"
+#define LEDCONTROL_MQTT_RECV_TOPIC "ledc/ch%d/set"
 #endif
 
 typedef struct ledcontrol_mqtt {

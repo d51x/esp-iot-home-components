@@ -17,16 +17,13 @@ void relay_mqtt_recv_cb(char *buf, void *args)
     uint8_t value = atoi( buf );
 
     #ifdef CONFIG_MQTT_TOPIC_SEND_RECV
-    if ( p->prev != value )
-    {
-    #endif
-        
-    esp_err_t err =  relay_write( (relay_handle_t)p, value);
-
-    #ifdef CONFIG_MQTT_TOPIC_SEND_RECV    
-        if ( err == ESP_OK )
-            p->prev = value;       
-    }
+        if ( p->prev != value )
+        {       
+            if ( relay_write( (relay_handle_t)p, value) == ESP_OK )
+                p->prev = value;       
+        }
+    #else
+        relay_write( (relay_handle_t)p, value);
     #endif 
 }
 

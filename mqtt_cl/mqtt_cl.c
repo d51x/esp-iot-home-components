@@ -383,11 +383,12 @@ void mqtt_add_receive_callback( const char *topic, uint8_t inner_topic, func_mqt
     mqtt_recv[ mqtt_recv_cnt - 1 ].inner = inner_topic;
 
 
+    // на внутренние топики (в зависимости от включенного компонента) подписки нет, т.к. подписка общая по "#" или "+/set", или "+/+/set", если включены раздельные топики
     if ( inner_topic == 0 )
     {
         if ( mqtt_client != NULL ) 
         {
-            esp_mqtt_client_subscribe(mqtt_client, topic, 0);
+            esp_mqtt_client_subscribe(mqtt_client, topic, 0); // подписка только на внешние топики (не текущего устройства)
         } else {
             ESP_LOGE(TAG, "mqtt client is not available");
         }
@@ -400,9 +401,26 @@ static void mqtt_subscribe_topics(esp_mqtt_client_handle_t client)
     char topic[32];
     strcpy(topic, _mqtt_dev_name ); /*MQTT_DEVICE*/
     //stresp_mqtt_client_subscribe(client, topic, 0);cpy(topic+strlen(topic), "#");
-    strcat(topic, "#");
+    
+    // subscribe to local topics
+    #ifdef CONFIG_MQTT_TOPIC_SEND_RECV
+        strcat(topic, "#");
+        esp_mqtt_client_subscribe(client, topic, 0);
+    #else
+        
+        //strcat(topic, "set/#");
+        //esp_mqtt_client_subscribe(client, topic, 0);
+
+        strcat(topic, "+/set");
+        esp_mqtt_client_subscribe(client, topic, 0);
+
+        strcpy(topic, _mqtt_dev_name);
+        strcat(topic, "+/+/set");
+        esp_mqtt_client_subscribe(client, topic, 0);
+    #endif
+
     //snprintf(topic, 32, MQTT_TOPIC_SUBSCRIBE, "test", "esp");
-    esp_mqtt_client_subscribe(client, topic, 0);
+    
 
     // subscribe to custom topics
     for ( uint8_t i = 0; i < mqtt_recv_cnt; i++ ) {
