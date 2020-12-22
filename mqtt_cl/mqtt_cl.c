@@ -335,8 +335,8 @@ void mqtt_publish_device_rssi(){
 }
 
 void mqtt_set_device_name(const char *dev_name){
-    memset(_mqtt_dev_name, 0, MQTT_DEICE_NAME_LENGTH + 1);
-    strcpy(_mqtt_dev_name, _mqtt_cfg.base_topic);
+    memset(_mqtt_dev_name, 0, strlen(dev_name));
+    strcpy((char *)_mqtt_dev_name, _mqtt_cfg.base_topic);
     //strcat(_mqtt_dev_name, "/");
     strcat(_mqtt_dev_name, dev_name);
     strcat(_mqtt_dev_name, "/");

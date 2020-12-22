@@ -372,7 +372,7 @@ int url_decode(const char *s, char *dec)
 	return o - dec;
 }
 
-uint32_t hex2int(char *hex) {
+uint32_t hex2int(const char *hex) {
     uint32_t val = 0;
     while (*hex) {
         // get current character then increment

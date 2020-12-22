@@ -169,7 +169,7 @@ esp_err_t ota_task_upgrade_from_web(httpd_req_t *req, char *err_text){
             ota_firm_t *fw = malloc( sizeof(ota_firm_t));
             strcpy(fw->fname, fname);
             fw->size = file_len; //total_len;
-            get_localtime(&fw->dt);
+            get_localtime(fw->dt);
             ota_save_nvs(fw);
             free(fw);
             ota_status.state = OTA_FINISH;

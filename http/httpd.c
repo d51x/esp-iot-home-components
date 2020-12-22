@@ -31,7 +31,7 @@ void register_uri_handlers(httpd_handle_t _server) {
 
 void add_uri_get_handler(httpd_handle_t _server, const char *uri, httpd_uri_func func, void *ctx) {
 
-    user_ctx_t *_ctx = (user_ctx_t *) ctx;
+    //user_ctx_t *_ctx = (user_ctx_t *) ctx;
 
     httpd_uri_t my_uri;
       my_uri.uri      = strdup(uri);
@@ -44,13 +44,13 @@ void add_uri_get_handler(httpd_handle_t _server, const char *uri, httpd_uri_func
       my_uri.user_ctx = ctx;
     }
 
-    esp_err_t err = httpd_register_uri_handler(_server, &my_uri);
+    /*esp_err_t err =*/ httpd_register_uri_handler(_server, &my_uri);
 }
 
 
 void add_uri_post_handler(httpd_handle_t _server, const char *uri, httpd_uri_func func, void *ctx) 
 {
-    user_ctx_t *_ctx = (user_ctx_t *) ctx;
+    //user_ctx_t *_ctx = (user_ctx_t *) ctx;
 
     httpd_uri_t my_uri;
       my_uri.uri      = strdup(uri);
@@ -63,7 +63,7 @@ void add_uri_post_handler(httpd_handle_t _server, const char *uri, httpd_uri_fun
       my_uri.user_ctx = ctx;
     }
 
-    esp_err_t err = httpd_register_uri_handler(_server, &my_uri);
+    /*esp_err_t err =*/ httpd_register_uri_handler(_server, &my_uri);
 
 }
 

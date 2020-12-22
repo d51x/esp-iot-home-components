@@ -45,7 +45,7 @@ const char *html_page_ota_selected ICACHE_RODATA_ATTR = "<h4 id=\"file_info\"></
 
 void ota_register_http_print_data();
 void ota_http_process_params(httpd_req_t *req, void *args);
-static void ota_debug_print(http_args_t *args);
+//static void ota_debug_print(http_args_t *args);
 
 static void ota_print_html(http_args_t *args)
 {
@@ -55,7 +55,7 @@ static void ota_print_html(http_args_t *args)
     httpd_resp_sendstr_chunk_fmt(req, html_block_data_header_start, ota_block_title);
 
     //html_page_ota_info
-    esp_app_desc_t *app_desc = esp_ota_get_app_description();
+    const esp_app_desc_t *app_desc = esp_ota_get_app_description();
     const esp_partition_t* esp_part = esp_ota_get_running_partition();
 
     ota_firm_t *fw = malloc( sizeof(ota_firm_t));
@@ -83,16 +83,16 @@ static void ota_print_html(http_args_t *args)
     httpd_resp_sendstr_chunk_fmt(req, html_page_ota, esp_part->size);
     httpd_resp_sendstr_chunk(req, html_page_ota_selected);
 
-    free(app_desc);
+    free((void *)app_desc); // TODO
 
     httpd_resp_sendstr_chunk(req, html_block_data_end);  
     httpd_resp_sendstr_chunk(req, html_block_data_end);  
 }
 
-static void ota_debug_print(http_args_t *args)
-{
-    http_args_t *arg = (http_args_t *)args;
-    httpd_req_t *req = (httpd_req_t *)arg->req;
+//static void ota_debug_print(http_args_t *args)
+//{
+//    http_args_t *arg = (http_args_t *)args;
+//    httpd_req_t *req = (httpd_req_t *)arg->req;
 
 
 
@@ -119,7 +119,7 @@ static void ota_debug_print(http_args_t *args)
     // );    
 
 
-}
+//}
 
 void ota_http_get_process_params(httpd_req_t *req, void *args)
 {
@@ -144,7 +144,7 @@ void ota_http_get_process_params(httpd_req_t *req, void *args)
     // }    
 }
 
-void ota_http_post_process_params(httpd_req_t *req, void *args)
+esp_err_t ota_http_post_process_params(httpd_req_t *req, void *args)
 {
     char err_text[200];
     

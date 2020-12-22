@@ -127,7 +127,7 @@ static void IRAM_ATTR handle_rx(void *arg)
     if ( arg == NULL ) return;
 
     portBASE_TYPE HPTaskAwoken = pdFALSE;
-    BaseType_t xHigherPriorityTaskWoken;
+    //BaseType_t xHigherPriorityTaskWoken;
 
     softuart_t *uart = (softuart_t *)arg;
 
@@ -295,7 +295,7 @@ bool softuart_puts(uint8_t uart_no, const char *s)
     return true;
 }
 
-bool softuart_write_bytes(uint8_t uart_no, uint8_t *buf, uint8_t sz)
+bool softuart_write_bytes(uint8_t uart_no, const uint8_t *buf, uint8_t sz)
 {
     for ( uint8_t i=0; i < sz; i++)
     {

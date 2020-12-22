@@ -7,8 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
-#define ICACHE_RODATA_ATTR __attribute__((section(".irom.text")))
+#include "esp_attr.h"
 
 extern const char *html_header_redirect ICACHE_RODATA_ATTR;
 extern const char *html_error ICACHE_RODATA_ATTR;

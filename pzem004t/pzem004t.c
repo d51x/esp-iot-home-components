@@ -73,13 +73,13 @@ typedef struct {
 #define RESPONSE_SIZE sizeof(PZEM_Command_t)
 #define RESPONSE_DATA_SIZE RESPONSE_SIZE - 2
 
-static volatile pzem_data_t _pzem_data;
+static pzem_data_t _pzem_data;
 
 pzem_read_strategy_t _strategy;
 
 #define PZEM_READ_ERROR_COUNT 20
 
-static uint8_t pzem_crc(uint8_t *data, uint8_t sz);
+static uint8_t pzem_crc(const uint8_t *data, uint8_t sz);
 #ifdef CONFIG_SENSORS_GET
 static void pzem_sensors_print(char **buf, void *args);
 #endif
@@ -94,7 +94,7 @@ static void pzem_sensors_print(char **buf, void *args);
 static void pzem_energy_values_save()
 {
 	memcpy(&rtc_pzem_energy, &_pzem_data.energy_values, sizeof(pzem_energy_t));
-	rtc_pzem_energy_crc = pzem_crc(&rtc_pzem_energy, sizeof(pzem_energy_t) );	
+	rtc_pzem_energy_crc = pzem_crc((uint8_t *)&rtc_pzem_energy, sizeof(pzem_energy_t) );	
 }
 
 //UART_NUM_0
@@ -142,7 +142,7 @@ void pzem_init(uint8_t uart_num)
 	
 	#ifdef CONFIG_SENSOR_PZEM004_T_CALC_CONSUMPTION
 
-	if ( rtc_pzem_energy_crc != pzem_crc(&rtc_pzem_energy, sizeof(pzem_energy_t)) )
+	if ( rtc_pzem_energy_crc != pzem_crc((uint8_t *)&rtc_pzem_energy, sizeof(pzem_energy_t)) )
 	{
 		// first start
 		ESP_LOGE(TAG, "Pzem rtc mem data wrong (crc incorrect)");
@@ -209,7 +209,7 @@ static uint8_t pzem_read_buffer(uint8_t *buffer, uint8_t cnt)
 	return result;
 }
 
-static uint8_t pzem_crc(uint8_t *data, uint8_t sz)
+static uint8_t pzem_crc(const uint8_t *data, uint8_t sz)
 {
     uint16_t crc = 0;
     for(uint8_t i=0; i<sz; i++)
@@ -291,7 +291,7 @@ static esp_err_t pzem_read(uint8_t resp, uint8_t *data)
 static float pzem_voltage(uint8_t *addr) {
 	uint8_t data[RESPONSE_DATA_SIZE];
 	pzem_send(addr, CMD_VOLTAGE);
-	esp_err_t err = pzem_read( RESP_VOLTAGE, &data);
+	esp_err_t err = pzem_read( RESP_VOLTAGE, data);
 	//pauseTask(10);
 	float value = (err == ESP_OK ) ? (data[0] << 8) + data[1] + ( data[2] / 10.0) : PZEM_ERROR_VALUE;
 	return value;
@@ -300,7 +300,7 @@ static float pzem_voltage(uint8_t *addr) {
 static float pzem_current(uint8_t *addr) {
 	uint8_t data[RESPONSE_DATA_SIZE];
 	pzem_send(addr, CMD_CURRENT);	
-	esp_err_t err = pzem_read( RESP_CURRENT, &data);
+	esp_err_t err = pzem_read( RESP_CURRENT, data);
 	//pauseTask(10);
 	float value = (err == ESP_OK ) ? (data[0] << 8) + data[1] + (data[2] / 100.0) : PZEM_ERROR_VALUE;
 	return value;
@@ -309,7 +309,7 @@ static float pzem_current(uint8_t *addr) {
 static float pzem_power(uint8_t *addr) {
 	uint8_t data[RESPONSE_DATA_SIZE];
 	pzem_send(addr, CMD_POWER);
-	esp_err_t err = pzem_read( RESP_POWER, &data);
+	esp_err_t err = pzem_read( RESP_POWER, data);
 	//pauseTask(10);
 	float value = (err == ESP_OK) ? (data[0] << 8) + data[1] : PZEM_ERROR_VALUE;
 	return value;
@@ -318,7 +318,7 @@ static float pzem_power(uint8_t *addr) {
 static float pzem_energy(uint8_t *addr) {
 	uint8_t data[RESPONSE_DATA_SIZE];
 	pzem_send(addr, CMD_ENERGY);
-	esp_err_t err = pzem_read( RESP_ENERGY, &data);
+	esp_err_t err = pzem_read( RESP_ENERGY, data);
 	//pauseTask(10);
 	float value = (err == ESP_OK ) ? ((uint32_t)data[0] << 16) + ((uint16_t)data[1] << 8) + data[2] : PZEM_ERROR_VALUE;
 	return value;
@@ -330,7 +330,7 @@ esp_err_t pzem_set_addr(PZEM_Address *_addr)
 	memcpy(&_pzem_addr, _addr, 4);
     uint8_t data[RESPONSE_DATA_SIZE];
     pzem_send(_pzem_addr, CMD_ADDRESS);
-    esp_err_t err = pzem_read(RESP_ADDRESS, &data);
+    esp_err_t err = pzem_read(RESP_ADDRESS, data);
 
 	#ifdef CONFIG_DEBUG_UART1
 		userlog("%s result %s \n", __func__, esp_err_to_name(err) );

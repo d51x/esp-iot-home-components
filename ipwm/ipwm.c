@@ -15,8 +15,8 @@ void pwm_begin(uint16_t freq_hz, uint8_t ch_cnt, const uint32_t *channels){
 
     pwm_init(period, duties, ch_cnt, channels);
 
-    int16_t *phases = malloc( sizeof(uint16_t) * ch_cnt);
-    memset(phases, 0, sizeof(uint16_t) * ch_cnt);
+    float *phases = malloc( sizeof(float) * ch_cnt);
+    memset(phases, 0, sizeof(float) * ch_cnt);
     pwm_set_phases(phases);
 
     pwm_start();

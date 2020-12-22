@@ -79,7 +79,7 @@ bool softuart_puts(uint8_t uart_no, const char *s);
  * @param sz size of buffer
  * @return true if no errors occured otherwise false
  */
-bool softuart_write_bytes(uint8_t uart_no, uint8_t *buf, uint8_t sz);
+bool softuart_write_bytes(uint8_t uart_no, const uint8_t *buf, uint8_t sz);
 
 /**
  * Check if data is available

@@ -8,10 +8,6 @@
 
 #pragma once
 
-//#include <stdio.h>
-#include <string.h>
-//#include <stdlib.h>
-
 #include "esp_event.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/event_groups.h"
