@@ -23,7 +23,7 @@
 #define MQTT_SEND_INTERVAL 60  // sec
 
 #define MQTT_PAYLOAD_SIZE_DEFAULT 10
-#define MQTT_CLIENT_ID_MASK "ESP_%2X%2X%2X"
+#define MQTT_CLIENT_ID_MASK "ESP_%02X%02X%02X"
 
 #define MQTT_DEVICE_UPTIME          "uptime"
 #define MQTT_DEVICE_FREEMEM         "freemem"

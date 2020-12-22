@@ -34,6 +34,7 @@ static void relay_mqtt_recv_queue_cb(void *arg)
 
     for( ;; )
     {
+        if ( relay_status_queue == NULL ) continue;
         if ( xQueueReceive( relay_status_queue, dev, xTicksToWait ) == pdPASS )
         {
             relay_t *relay = (relay_t *)dev;
@@ -47,7 +48,10 @@ static void relay_mqtt_recv_queue_cb(void *arg)
 
 void relay_mqtt_init()
 {
-    xTaskCreate(relay_mqtt_recv_queue_cb, "relay_recv", 1024, NULL, 10, NULL); // При 1024 иногда случался Stack canary watchpoint triggered (mcp23017_recv)
+    if ( relay_count > 0 && relays != NULL )
+        xTaskCreate(relay_mqtt_recv_queue_cb, "relay_recv", 1024, NULL, 10, NULL); // При 1024 иногда случался Stack canary watchpoint triggered (mcp23017_recv)
+    else
+        ESP_LOGE(TAG, "%s: no relays initialized yet", __func__);
 
     for ( uint8_t i = 0; i < relay_count; i++)
     {
