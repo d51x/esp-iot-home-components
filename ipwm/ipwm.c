@@ -9,9 +9,10 @@ static uint16_t period;
 void pwm_begin(uint16_t freq_hz, uint8_t ch_cnt, const uint32_t *channels){
     ESP_LOGD(TAG, "%s started...", __func__);
 
-    // !!! WORKAROUND OF NON WORKING PWM !!!
-    REG_WRITE(PERIPHS_DPORT_BASEADDR, (REG_READ(PERIPHS_DPORT_BASEADDR) & ~0x1F) | 0x1);
-    
+    // !!! WORKAROUND OF NON WORKING PWM !!!   fixed in ESP_RTOS_SDK commit 61c3c1154e6e6901dc1f2cb6dd67d71fb805a86d
+    //REG_WRITE(PERIPHS_DPORT_BASEADDR, (REG_READ(PERIPHS_DPORT_BASEADDR) & ~0x1F) | 0x1);
+    //REG_WRITE(INT_ENA_WDEV, REG_READ(INT_ENA_WDEV) | WDEV_TSF0_REACH_INT);
+
 	period = 1000000 / freq_hz;  // Hz to period, Just freq_hz is useful
     uint32_t *duties = malloc( sizeof(uint32_t) * ch_cnt);
     for (uint8_t i=0;i<ch_cnt;i++) duties[i] = period;

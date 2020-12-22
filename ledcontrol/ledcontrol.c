@@ -110,8 +110,9 @@ void ledcontrol_init()
 		led_pins[ ch ] = ledc->channels[i].pin;
 	} 
 
-    // !!! WORKAROUND OF NON WORKING PWM !!!
-    REG_WRITE(PERIPHS_DPORT_BASEADDR, (REG_READ(PERIPHS_DPORT_BASEADDR) & ~0x1F) | 0x1);
+    // !!! WORKAROUND OF NON WORKING PWM !!!   fixed in ESP_RTOS_SDK commit 61c3c1154e6e6901dc1f2cb6dd67d71fb805a86d
+    //REG_WRITE(PERIPHS_DPORT_BASEADDR, (REG_READ(PERIPHS_DPORT_BASEADDR) & ~0x1F) | 0x1);
+    //REG_WRITE(INT_ENA_WDEV, REG_READ(INT_ENA_WDEV) | WDEV_TSF0_REACH_INT);
 
     period = 1000000 / ledc->freq;  // Hz to period, Just freq_hz is useful
     uint32_t *duties = malloc( sizeof(uint32_t) * ledc->led_cnt);
@@ -143,7 +144,7 @@ void ledcontrol_init()
 // установить duty канала
 esp_err_t ledcontrol_set_duty(ledcontrol_channel_t *channel, uint16_t duty)
 {
-    ESP_LOGI(TAG, "%s: duty => %d", __func__, duty);
+    ESP_LOGI(TAG, "%s: ==> %d", __func__, duty);
     channel->duty = duty;
     uint16_t real_duty = duty*period/MAX_DUTY;
     esp_err_t err = pwm_set_duty(channel->channel, real_duty);
