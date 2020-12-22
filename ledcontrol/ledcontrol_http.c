@@ -47,10 +47,6 @@ static void ledcontrol_print_data(http_args_t *args)
     
     httpd_resp_sendstr_chunk_fmt(req, html_block_data_header_start, group->title);
 
-    httpd_resp_sendstr_chunk(req, html_block_data_header_start);
-
-    
-
     for (uint8_t i = 0; i < ledc->led_cnt; i++ ) 
     {   
         ledcontrol_channel_t *ch = ledc->channels + i;
@@ -67,7 +63,6 @@ static void ledcontrol_print_data(http_args_t *args)
         }
     }
     
-    httpd_resp_sendstr_chunk(req, html_block_data_end);
     httpd_resp_sendstr_chunk(req, html_block_data_end);
 }
 
