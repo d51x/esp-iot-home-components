@@ -9,6 +9,9 @@ static uint16_t period;
 void pwm_begin(uint16_t freq_hz, uint8_t ch_cnt, const uint32_t *channels){
     ESP_LOGD(TAG, "%s started...", __func__);
 
+    // !!! WORKAROUND OF NON WORKING PWM !!!
+    REG_WRITE(PERIPHS_DPORT_BASEADDR, (REG_READ(PERIPHS_DPORT_BASEADDR) & ~0x1F) | 0x1);
+    
 	period = 1000000 / freq_hz;  // Hz to period, Just freq_hz is useful
     uint32_t *duties = malloc( sizeof(uint32_t) * ch_cnt);
     for (uint8_t i=0;i<ch_cnt;i++) duties[i] = period;

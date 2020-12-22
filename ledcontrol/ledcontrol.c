@@ -110,13 +110,16 @@ void ledcontrol_init()
 		led_pins[ ch ] = ledc->channels[i].pin;
 	} 
 
+    // !!! WORKAROUND OF NON WORKING PWM !!!
+    REG_WRITE(PERIPHS_DPORT_BASEADDR, (REG_READ(PERIPHS_DPORT_BASEADDR) & ~0x1F) | 0x1);
+
     period = 1000000 / ledc->freq;  // Hz to period, Just freq_hz is useful
     uint32_t *duties = malloc( sizeof(uint32_t) * ledc->led_cnt);
     for (uint8_t i=0;i<ledc->led_cnt;i++) duties[i] = period;
     pwm_init(period, duties, ledc->led_cnt, led_pins);
 
-    int16_t *phases = malloc( sizeof(uint16_t) * ledc->led_cnt);
-    memset(phases, 0, sizeof(uint16_t) * ledc->led_cnt);
+    float *phases = malloc( sizeof(float) * ledc->led_cnt);
+    memset(phases, 0, sizeof(float) * ledc->led_cnt);
     pwm_set_phases(phases);
 
 	for (uint8_t i = 0; i < ledc->led_cnt; i++ ) {
@@ -138,7 +141,9 @@ void ledcontrol_init()
 }
 
 // установить duty канала
-esp_err_t ledcontrol_set_duty(ledcontrol_channel_t *channel, uint16_t duty){
+esp_err_t ledcontrol_set_duty(ledcontrol_channel_t *channel, uint16_t duty)
+{
+    ESP_LOGI(TAG, "%s: duty => %d", __func__, duty);
     channel->duty = duty;
     uint16_t real_duty = duty*period/MAX_DUTY;
     esp_err_t err = pwm_set_duty(channel->channel, real_duty);
