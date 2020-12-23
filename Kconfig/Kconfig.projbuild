@@ -51,6 +51,20 @@ menu "Project config"
                     Enable this option to print task info - name, state, prio, free stack size
     endmenu
 
+    menu "User web print"
+        config USER_WEB_PRINT
+            bool "Enable User Web Print data"
+            default y
+            help
+                Enable User Web Print data
+
+        config USER_WEB_CONFIG
+            bool "Enable User Web Config"
+            default y
+            help
+                Enable User Web Config                
+    endmenu
+
     menu "MQTT Component"        
         config MQTT_URL
             string "MQTT URL"
