@@ -4,8 +4,7 @@
 
 static const char *TAG = "RGB";
 
-volatile  static rgbcontrol_t *rgb_ctrl = NULL;
-
+volatile static rgbcontrol_t *rgb_ctrl = NULL;
 
 void rgbcontrol_set_color_hsv(color_hsv_t hsv);  
 void rgbcontrol_set_color_rgb(color_rgb_t rgb);  
@@ -30,8 +29,6 @@ void _rgbcontrol_set_color_rgb(color_rgb_t rgb, bool update);
 void _rgbcontrol_set_color_hsv(color_hsv_t hsv, bool update);
 
 
-
-// TODO: инитить ledc каналы внутри rgb_init, в функцию передавать только gpio каналов
 
 rgbcontrol_t* rgbcontrol_init(ledcontrol_t *ledc, ledcontrol_channel_t *red, ledcontrol_channel_t *green, ledcontrol_channel_t *blue)
 {
