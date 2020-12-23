@@ -4,6 +4,9 @@
 
 static const char *TAG = "COLOREFFECT";
 
+#define RGB_EFFECTS_TASK_PRIORITY 6
+#define RGB_EFFECTS_TASK_STACK_SIZE 1024
+
   // current effect
 static effects_t* effects = NULL;
 void* pcolors = NULL;
@@ -74,6 +77,23 @@ static void cleanup_effect_colors(effects_t *ee) {
     }
 }
 
+
+static void effects_data_mqtt_publish(effect_t *e)
+{
+    
+    rgbcontrol_queue_t *data = (rgbcontrol_queue_t *) calloc(1, sizeof(rgbcontrol_queue_t));
+
+    data->type = RGB_EFFECT_ID;
+    data->data = (char *) e->name;
+
+    
+    if ( rgbcontrol_color_mqtt_send_queue != NULL ) 
+        xQueueSendToBack(rgbcontrol_color_mqtt_send_queue, data, 0);
+
+    free(data);        
+
+}
+
 void effects_set_effect( int8_t id ){
     if ( id < 0 || id >= COLOR_EFFECTS_MAX ) return;
     cleanup_effect_colors(effects);
@@ -81,25 +101,17 @@ void effects_set_effect( int8_t id ){
     effect_t *e = effects->effect + id;
     effects->task_cb = e->cb;
 
-    if ( effects->task_cb != NULL ) {
-        xTaskCreate( effects->task_cb, "effect_task", 2048, (effect_t *)e, 10, &effects->task);
-    }            
+    ESP_LOGI(TAG, "%s: %s", __func__, color_effects[id].name);
 
+    if ( effects->task_cb != NULL && id != EFFECT_STOP) {
+        xTaskCreate( effects->task_cb, "effect_task", RGB_EFFECTS_TASK_STACK_SIZE, (effect_t *)e, RGB_EFFECTS_TASK_PRIORITY, &effects->task);
+    }        
+
+    
     if ( effects->effect_id != id ) 
     {
-        rgbcontrol_queue_t *data = (rgbcontrol_queue_t *) calloc(1, sizeof(rgbcontrol_queue_t));
-
-        data->type = RGB_EFFECT_ID;
-        data->data = (char *) e->name;
-        if ( rgbcontrol_color_queue != NULL ) 
-            xQueueSendToBack(rgbcontrol_color_queue, data, 0);
-
-        data->type = RGB_EFFECT_ID;
-        data->data = id;
-        if (rgbcontrol_color_queue != NULL )
-            xQueueSendToBack(rgbcontrol_color_queue, data, 0);
-
-        free(data);        
+        // эта для публикации в mqtt новых значений эффекта
+        effects_data_mqtt_publish(e);
     }
 
     effects->effect_id = id;

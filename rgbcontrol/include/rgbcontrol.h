@@ -104,7 +104,7 @@ typedef struct rgbcontrol_queue {
     rgbcontrol_queue_type_t type;
 } rgbcontrol_queue_t;
 
-QueueHandle_t rgbcontrol_color_queue;
+QueueHandle_t rgbcontrol_color_mqtt_send_queue;
 
 // здесь укажем только внешние функции
 // создать объект rgbcontrol

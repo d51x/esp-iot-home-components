@@ -28,7 +28,7 @@ static void rgbcontrol_mqtt_recv_queue_cb(void *arg)
 
     for( ;; )
     {
-        if ( rgbcontrol_color_queue != NULL && xQueueReceive( rgbcontrol_color_queue, data, xTicksToWait ) == pdPASS )
+        if ( rgbcontrol_color_mqtt_send_queue != NULL && xQueueReceive( rgbcontrol_color_mqtt_send_queue, data, xTicksToWait ) == pdPASS )
         {
             
             if ( data->type == RGB_COLOR_INT)

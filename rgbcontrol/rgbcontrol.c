@@ -81,7 +81,7 @@ rgbcontrol_t* rgbcontrol_init(ledcontrol_t *ledc, ledcontrol_channel_t *red, led
     rgb_ctrl->set_effects = rgbcontrol_set_effects;    
     #endif
 
-    rgbcontrol_color_queue = xQueueCreate(5, sizeof(rgbcontrol_queue_t));
+    rgbcontrol_color_mqtt_send_queue = xQueueCreate(5, sizeof(rgbcontrol_queue_t));
 
     return rgb_ctrl;
 }
@@ -118,8 +118,8 @@ void rgbcontrol_set_color_int(uint32_t color32) {
     rgbcontrol_queue_t *data = (rgbcontrol_queue_t *) calloc(1, sizeof(rgbcontrol_queue_t));
     data->type = RGB_COLOR_INT;
     data->data = color32;
-    if ( rgbcontrol_color_queue != NULL ) 
-        xQueueSendToBack(rgbcontrol_color_queue, data, 0);
+    if ( rgbcontrol_color_mqtt_send_queue != NULL ) 
+        xQueueSendToBack(rgbcontrol_color_mqtt_send_queue, data, 0);
     free(data);
 }
 
