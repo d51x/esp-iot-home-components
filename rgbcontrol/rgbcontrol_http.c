@@ -56,8 +56,6 @@ static void rgbcontrol_print_color_sliders(httpd_req_t *req, char *data, rgbcont
                                 ); 
 httpd_resp_sendstr_chunk(req, data);
     // print sliders
-    //strcpy(data+strlen(data), html_block_led_control_data_start);
-httpd_resp_sendstr_chunk(req, html_block_data_header_start);
 
     rgb_to_hsv(&rgb, &rgb_ctrl->hsv);
     ledcontrol_channel_t *ch1, *ch2, *ch3;
@@ -96,8 +94,6 @@ httpd_resp_sendstr_chunk(req, data);
     
 httpd_resp_sendstr_chunk(req, data);
 
-    //strcpy(data+strlen(data), html_block_led_control_end);
-    httpd_resp_sendstr_chunk(req, html_block_data_end);
     //strcpy(data+strlen(data), html_block_led_control_end);
     httpd_resp_sendstr_chunk(req, html_block_data_end);
 }
