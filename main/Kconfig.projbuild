@@ -1,0 +1,395 @@
+menu "Project config"
+
+
+    menu "WIFI Config"
+        config ESP_WIFI_SSID
+            string "WiFi SSID"
+            default "myssid"
+            help
+            SSID (network name) for the example to connect to.
+
+        config ESP_WIFI_PASSWORD
+            string "WiFi Password"
+            default "mypassword"
+            help
+            WiFi password (WPA or WPA2) for the example to use.
+
+        config WIFI_AP_PASSWORD
+            string "WiFi AP Password"
+            default ""
+            help
+                WiFi password used in recovery network
+
+        config ESP_MAXIMUM_RETRY
+            int "Maximum retry"
+            default 5
+            help
+                Set the Maximum retry to avoid station reconnecting to the AP unlimited when the AP is really inexistent.
+                    
+    endmenu
+
+
+    menu "Debug options"
+        config COMPONENT_DEBUG
+            bool "Enable Debug Component"
+            default false
+            help
+                Active the debug control component / tasks.
+
+            config DEBUG_UART1
+                bool "Enable Debug Uart1"
+                default false
+                depends on COMPONENT_DEBUG
+                help
+                    Only tx (gpio2) available for Uart1
+                    
+            config DEBUG_PRINT_TASK_INFO
+                bool "Print task info"
+                default n
+                depends on COMPONENT_DEBUG
+                help
+                    Enable this option to print task info - name, state, prio, free stack size
+    endmenu
+
+    menu "User code"
+        config COMPONENT_USER_CODE
+            bool "Enable User Code"
+            default false
+            help
+                Enable User Code
+    endmenu
+
+    menu "MQTT Component"        
+        config MQTT_URL
+            string "MQTT URL"
+            default "mqtt://192.168.2.63:1883"
+            help
+                URL of the broker to connect to
+
+         config MQTT_LOGIN
+            string "MQTT username"
+            default ""
+            help
+                MQTT username for login
+
+         config MQTT_PASS
+            string "MQTT password"
+            default ""
+            help
+                MQTT password for login
+
+        config MQTT_TOPIC_BASE
+            string "MQTT Base for default topic"
+            default "home/"
+            help
+                Base for default topic, which is concatenate with ESP Name (hostname). It is important
+                to remember to put a slash (/) at the end.
+                    
+        config MQTT_KEEPALIVE_TIMEOUT
+            int "MQTT Keep Alive (ses)"
+            default 60
+            help
+                Number of miliseconds to send keep alive
+
+        config MQTT_TASK_PRIORITY
+            int "Task priority"
+            default 12
+            help
+                MQTT Task priority (default 12)  
+
+         config MQTT_SETTINGS_ON_AIR
+            bool "MQTT apply setting ON AIR"
+            default y
+            help
+                Apply MQTT settings ON AIR on setup web page, when settings was changed
+
+        config MQTT_TOPIC_SEND_RECV
+            bool "MQTT the same topic for send and receive"
+            default y
+            help
+                Apply MQTT settings to make the same topic for sending and receiving data                
+
+        config SENSOR_MQTT
+            bool "MQTT Sensors"
+            default n
+            help
+                Subscribe to mqtt-topics
+
+            config SENSOR_MQTT_BASE_TOPIC_COUNT
+                int "MQTT Sensors Base topics count"
+                default 10
+                depends on SENSOR_MQTT
+                help
+                    Number of base topics to subscribe  
+
+            config SENSOR_MQTT_END_POINT_COUNT
+                int "MQTT Sensors endpoints count for each base topic"
+                default 5
+                depends on SENSOR_MQTT
+                help
+                    Number of endpoints for each base topics                                
+    endmenu    
+
+    menu "HTTP server"
+        config HTTP_SERVER_STACK_SIZE
+            int "Webserver task stack size"
+            range 2048 16384
+            default 8192
+            help
+                Webserver tasks stack size
+
+    endmenu
+        
+    menu "Relay component"
+        config COMPONENT_RELAY
+            bool "Enable Relay component"
+            default n
+            help
+                Enable Relay component
+
+            config RELAY_HTTP
+                bool "Enable Relay HTTP control"
+                default n
+                depends on COMPONENT_RELAY
+                help
+                    Enable Relay HTTP and web control
+                                    
+    endmenu
+
+    menu "IR receiver"
+        config COMPONENT_IR_RECV
+            bool "Enable IR receiver"
+            default n
+            help
+                Enable IR receiver
+
+            config IR_RECV_GPIO
+                int "IR GPIO"
+                default 4
+                depends on COMPONENT_IR_RECV
+                help
+                    IR receiver GPIO
+
+            config IR_RECV_DELAY
+                int "IR debounce delay (ms)"
+                default 100
+                depends on COMPONENT_IR_RECV
+                help
+                    IR receiver delay debounce
+
+            config IR_RECV_HTTP
+                bool "IR receiver web config"
+                default n
+                depends on COMPONENT_IR_RECV
+                help
+                    IR receiver web config                   
+    endmenu
+
+    menu "I2C Component"        
+        config COMPONENT_I2C
+            bool "Enable I2C driver"
+            default y
+            help
+                Enable I2C driver
+
+        config COMPONENT_I2C_GPIO_SDA
+            int "SDA GPIO"
+            default 2
+            depends on COMPONENT_I2C
+            help
+                SDA Gpio number
+
+        config COMPONENT_I2C_GPIO_SCL
+            int "SCL GPIO"
+            default 0
+            depends on COMPONENT_I2C
+            help
+                SCL Gpio number
+
+        config COMPONENT_I2C_SCANNER
+            bool "Enable I2C scanner"
+            default y
+            depends on COMPONENT_I2C
+            help
+                Enable I2C scanner
+
+        config COMPONENT_PCF8574
+            bool "PCF8574"
+            default n
+            depends on COMPONENT_I2C
+            help
+                Enable PCF8574
+
+        config COMPONENT_LCD2004
+            bool "LCD2004"
+            default n
+            depends on COMPONENT_I2C
+            help
+                Enable LCD2004
+
+        config COMPONENT_LCD2004_ADDR
+            hex "LCD address (HEX) on I2C"
+            default 0x3F
+            depends on COMPONENT_LCD2004
+            help
+                LCD address in HEX on I2C
+
+        config COMPONENT_LCD2004_HTTP
+            bool "LCD2004 web control"
+            default n
+            depends on   COMPONENT_LCD2004
+            help
+                Options and control block on Tools page, control LCD2004 via http (on/off backlight)
+
+        config COMPONENT_MCP23017
+            bool "MCP23017"
+            default n
+            depends on COMPONENT_I2C
+            help
+                Enable MCP23017
+
+        config MCP23017_GPIO_INPUTS
+            hex "MCP23017 GPIO INPUTS"
+            default 0xFF00
+            depends on COMPONENT_MCP23017
+            help
+                Set pins as INPUT (default 0xFF00 - PORTB), other pins (PORTA) as OUTPUTS. 
+                0x00 - all optputs, 0xFF - all inputs, 
+                bits sequence 15 14 13 .... 2 1 0
+                1 - input
+                0 - output
+
+        config MCP23017_ISR
+            bool "MCP23017 interrupts"
+            default n
+            depends on COMPONENT_MCP23017
+            help
+                Enable MCP23017 interrupts
+
+        config MCP23017_ISR_INTA_GPIO
+            int "GPIO for INTA"
+            default 4
+            depends on MCP23017_ISR
+            help
+                Set GPIO for INTA. 255 - disable
+
+        config MCP23017_ISR_INTB_GPIO
+            int "GPIO for INTB"
+            default 5
+            depends on MCP23017_ISR
+            help
+                Set GPIO for INTB, 255 - disable
+
+        config MCP23017_HTTP
+            bool "MCP23017 web control"
+            default n
+            depends on COMPONENT_MCP23017
+            help
+                Enable MCP23017 web control
+
+
+    endmenu
+    
+    menu "LED Controller"
+        config LED_CONTROLLER
+            bool "Enable LED Controller"
+            default n
+            help
+                Enable LED Controller
+
+            config LED_CONTROL_HTTP
+                bool "Channel sliders on page and HTTP GET control"
+                default y
+                depends on LED_CONTROLLER
+                help
+                    Enable LED Control by HTTP GET and web page sliders of channels
+
+            config RGB_CONTROLLER
+                bool "Enable RBG Controller + mqtt"
+                default n
+                depends on LED_CONTROLLER
+                help
+                    Enable RGB Controller, more convinient control of 3 LED Channels via MQTT 
+
+                config RGB_CONTROLLER_HTTP
+                    bool "Enable HTTP GET for RGB controller"
+                    default n
+                    depends on RGB_CONTROLLER
+                    help
+                        Enable HTTP GET requests for more convinient control of 3 LED Channels    
+
+                config RGB_EFFECTS
+                    bool "Enable RGB Effects"
+                    default n
+                    depends on RGB_CONTROLLER
+                    help
+                        Enable HTTP GET requests for more convinient control of 3 LED Channels      
+                        
+                    config RGB_EFFECTS_HTTP
+                        bool "Enable HTTP GET and web select input for control RGB Effects"
+                        default n
+                        depends on RGB_EFFECTS
+                        help
+                            Enable HTTP GET and web select input for control RGB Effects                          
+    endmenu
+
+    menu "Sensors"
+        config SENSORS_GET
+            bool "Sensors data by HTTP-GET"
+            default y
+            help
+                Response sensors data on /sensors page
+                
+        config SENSOR_SHT21
+            bool "SHT21 sensor"
+            default n
+            depends on COMPONENT_I2C
+            help 
+                Enable SHT21 sensor
+
+        config SENSOR_PZEM004_T        
+            bool "Pzem 004 t v.1"
+            default n
+            help
+                Enable PZEM 004 T v.1 energy monitor
+
+            config SENSOR_PZEM004_T_SOFTUART
+                bool "Pzem via soft uart"
+                default n
+                depends on SENSOR_PZEM004_T
+                help
+                    Enable read PZEM via soft uart
+            
+            config SENSOR_PZEM004_T_CALC_CONSUMPTION
+                bool "PZEM calculate energy consumption"
+                default y
+                depends on SENSOR_PZEM004_T
+                help
+                    Calculating energy consumption of yesterday and today
+
+            config SENSOR_PZEM004_T_CONSUMPTION_T1
+                int "T1 Hour (day start)"
+                range 0 23
+                default 7
+                depends on SENSOR_PZEM004_T_CALC_CONSUMPTION
+                help
+                    T1 Hour (day start) for calculate consumption
+
+            config SENSOR_PZEM004_T_CONSUMPTION_T2
+                int "T2 Hour (night start)"
+                range 0 23
+                default 23
+                depends on SENSOR_PZEM004_T_CALC_CONSUMPTION
+                help
+                    T2 Hour (night start) for calculate consumption
+
+            config SENSOR_PZEM004_T_WEB
+                bool "Show PZEM data on main page in own block"
+                default y
+                depends on SENSOR_PZEM004_T
+                help
+                    Show PZEM data on main page in own block
+                
+    endmenu
+
+endmenu
