@@ -33,6 +33,7 @@ struct relay {
     relay_state_t state;
     relay_close_level_t close_level;
     relay_state_t prev;
+    bool save_state;
     char *name;
 };   
 
@@ -50,7 +51,7 @@ extern QueueHandle_t relay_status_queue;
   *
   * @return relay_handle_t the handle of the relay created 
   */
-relay_handle_t relay_create(char *name, gpio_num_t io_num, relay_close_level_t level);
+relay_handle_t relay_create(const char *name, gpio_num_t io_num, relay_close_level_t level, bool save_state);
 
 /**
   * @brief set state of relay
@@ -84,6 +85,8 @@ relay_state_t relay_read(relay_handle_t relay_handle);
   */
 esp_err_t relay_delete(relay_handle_t relay_handle);
 
+void relay_save_nvs();
+void relay_load_nvs();
 
 #endif
 #endif

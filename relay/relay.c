@@ -1,5 +1,6 @@
 
 #include "relay.h"
+#include "nvsparam.h"
 
 #ifdef CONFIG_COMPONENT_RELAY
 
@@ -14,10 +15,15 @@
 
 static const char* TAG = "RELAY";
 
+#define PARAM_RELAYS "relays"
+#define PARAM_RELAYS_COUNT "cnt"  // сохраняем кол-во
+#define PARAM_RELAYS_DATA "data"  // сохраняем целиком массив [relay_t *relays]
+
+
 QueueHandle_t relay_status_queue = NULL;
 relay_t *relays = NULL;
 
-relay_handle_t relay_create(char *name, gpio_num_t pin, relay_close_level_t level)
+relay_handle_t relay_create(const char *name, gpio_num_t pin, relay_close_level_t level, bool save_state)
 {   
     for (uint8_t i = 0; i < relay_count; i++)
     {
@@ -36,6 +42,7 @@ relay_handle_t relay_create(char *name, gpio_num_t pin, relay_close_level_t leve
     relay_p->name = name;
     relay_p->close_level = level;
     relay_p->state = RELAY_STATE_CLOSE;
+    relay_p->save_state = save_state;
 
     gpio_config_t io_conf;
     io_conf.intr_type = GPIO_INTR_DISABLE;
@@ -46,6 +53,8 @@ relay_handle_t relay_create(char *name, gpio_num_t pin, relay_close_level_t leve
     IOT_CHECK(TAG, gpio_config(&io_conf) == ESP_OK, NULL);
 
     memcpy(&relays[ relay_count - 1], relay_p, sizeof(relay_t));
+
+    ESP_LOGI(TAG, "%s: created relay %s for pin %d", __func__, name, pin);
     return (relay_handle_t) relay_p;
 }
 
@@ -96,4 +105,51 @@ esp_err_t relay_delete(relay_handle_t relay_handle)
     return ESP_OK;
 }
 
+void relay_load_nvs()
+{
+    #ifdef CONFIG_RELAY_CONFIG
+    uint8_t cnt = 0;
+    relay_t *_relays = NULL;
+
+    if ( nvs_param_u8_load(PARAM_RELAYS, PARAM_RELAYS_COUNT,  &cnt) != ESP_OK ) {
+        ESP_LOGE(TAG, "%s: unable load relay's count from nvs", __func__ );
+        return;
+    }    
+
+    if ( cnt == 0 ) {
+        ESP_LOGW(TAG, "%s: relays count = 0", __func__ );
+        return;
+    }
+
+    // temporary array
+    _relays = (relay_t * ) calloc( _relays, cnt * sizeof(relay_t));
+
+    if ( nvs_param_load(PARAM_RELAYS, PARAM_RELAYS_DATA, _relays) != ESP_OK )
+    {
+        ESP_LOGE(TAG, "%s: unable load relay's data from nvs", __func__ );
+        free( _relays );
+        return;
+    }
+
+    // create relays
+    for ( uint8_t i = 0; i < cnt; i++)
+    {
+        // relay_hrelay_read( (relay_handle_t)&relays[i]);
+        relay_create( _relays[i].name, _relays[i].pin, _relays[i].close_level, _relays[i].save_state);
+        if ( _relays[i].save_state ) {
+            relay_write((relay_handle_t)&relays[i],  _relays[i].state);
+        }
+    }
+
+    free( _relays );
+    #endif
+}
+
+void relay_save_nvs()
+{
+    #ifdef CONFIG_RELAY_CONFIG
+    nvs_param_u8_save(PARAM_RELAYS, PARAM_RELAYS_COUNT, relay_count);
+    nvs_param_save(PARAM_RELAYS, PARAM_RELAYS_DATA, relays, sizeof(relay_t) * relay_count);
+    #endif
+}
 #endif

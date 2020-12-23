@@ -149,10 +149,15 @@ menu "Project config"
 
             config RELAY_HTTP
                 bool "Enable Relay HTTP control"
-                default n
+                default y
                 depends on COMPONENT_RELAY
                 help
                     Enable Relay HTTP and web control
+
+                config RELAY_CONFIG
+                    bool "Web relays configuration"
+                    default y
+                    depends on RELAY_HTTP
                                     
     endmenu
 
