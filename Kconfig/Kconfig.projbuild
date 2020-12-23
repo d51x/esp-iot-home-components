@@ -51,14 +51,6 @@ menu "Project config"
                     Enable this option to print task info - name, state, prio, free stack size
     endmenu
 
-    menu "User code"
-        config COMPONENT_USER_CODE
-            bool "Enable User Code"
-            default false
-            help
-                Enable User Code
-    endmenu
-
     menu "MQTT Component"        
         config MQTT_URL
             string "MQTT URL"
