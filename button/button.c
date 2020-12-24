@@ -231,6 +231,7 @@ button_handle_t button_create(gpio_num_t gpio_num, button_active_t active_level)
     ESP_LOGD(TAG, __func__);
     button_t *btn = (button_t *) calloc(1, sizeof(button_t));  // выделили память под button структуру
     POINT_ASSERT(TAG, btn, NULL);
+    btn->active_level = active_level;
     btn->io_num = gpio_num;
     btn->state = BUTTON_STATE_IDLE;
     btn->taskq_on = 0;
@@ -263,8 +264,13 @@ button_handle_t button_create(gpio_num_t gpio_num, button_active_t active_level)
     gpio_conf.intr_type = GPIO_INTR_ANYEDGE;
     gpio_conf.mode = GPIO_MODE_INPUT;
     gpio_conf.pin_bit_mask = (1ULL << gpio_num);
-    gpio_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
-    gpio_conf.pull_up_en = GPIO_PULLUP_ENABLE;
+    if(btn->active_level){
+        gpio_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
+        gpio_conf.pull_up_en = GPIO_PULLUP_ENABLE;
+    }else{
+        gpio_conf.pull_down_en = GPIO_PULLDOWN_ENABLE;
+        gpio_conf.pull_up_en = GPIO_PULLUP_DISABLE;
+    }
     gpio_config(&gpio_conf);
     gpio_isr_handler_add(gpio_num, button_gpio_isr_handler, btn);   // обработчик прерывания, в качестве аргумента передается указатель на сам объект button
 
