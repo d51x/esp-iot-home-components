@@ -265,10 +265,6 @@ void effect_stop(void *arg){
     e->type = STOP;
     //e->hsv.h = 0; e->hsv.s = 0; e->hsv.v = 0;
     //e->pe->set_color_hsv( e->hsv );
-    // TODO: ранее task был запущен, теперь этого не требуется
-    while (1) {
-        vTaskDelay( 1000 / portTICK_RATE_MS );
-    }
 }
 
 static void calc_color_duty_and_dir(uint8_t *val, effect_direction_e *dir) {

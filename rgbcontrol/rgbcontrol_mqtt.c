@@ -15,7 +15,7 @@ static const char* TAG = "RGBMQTT";
 #else
 #define MQTT_RECV_TOPIC_COLOR_INT MQTT_SEND_TOPIC_COLOR_INT"/set"
 #define MQTT_RECV_TOPIC_EFFECT_ID MQTT_SEND_TOPIC_EFFECT_ID"/set"
-#define MQTT_RECV_TOPIC_EFFECT_NAME MQTT_SEND_TOPIC_EFFECT_NAME"set"
+#define MQTT_RECV_TOPIC_EFFECT_NAME MQTT_SEND_TOPIC_EFFECT_NAME"/set"
 #endif
 
 static void rgbcontrol_mqtt_recv_queue_cb(void *arg)
