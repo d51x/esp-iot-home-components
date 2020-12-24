@@ -28,7 +28,7 @@ typedef struct color_hsv_t {
    uint8_t      v;
 } color_hsv_t;
 
-static const uint32_t hsv_colors_7[7] = { 0,     	// red	
+static const uint16_t hsv_colors_7[7] = { 0,     	// red	
                                           30,		// orange
                                           60,		// yellow
                                           120,		// green

@@ -25,6 +25,8 @@
 #define EFFECT_FADEUP_DELAY 40
 #define EFFECT_FADEDOWN_DELAY 60
 
+#define EFFECT_NAME_LEN 10
+
 typedef void (* effect_f)();
 typedef void (* effectcb_f)(void *arg);
 typedef void (* effect_set_color_hsv_f)(color_hsv_t hsv);  
@@ -50,12 +52,12 @@ typedef struct effect effect_t;
 typedef struct effects effects_t;
 
 struct effect {
-    char name[20];
+    char name[EFFECT_NAME_LEN];
     color_effect_e type;
     int16_t fadeup_delay;
     int16_t fadedown_delay;
     effectcb_f cb;
-    uint32_t *colors;
+    uint16_t *colors;
     uint16_t colors_cnt;
     color_hsv_t hsv;
     effects_t *pe;          // pinter to parent object 
@@ -91,6 +93,7 @@ void effect_wheel(void *arg);
 void effect_rnd(void *arg);
 void effect_stop(void *arg);
 
+// EFFECT_NAME_LEN = 10
 static effect_t color_effects[COLOR_EFFECTS_MAX]  = {
     { "jump3",      JUMP,           EFFECT_FADE_DELAY,      EFFECT_FADE_NO_DELAY,   effect_jump3 },     // 0
     { "jump7",      JUMP,           EFFECT_FADE_DELAY,      EFFECT_FADE_NO_DELAY,   effect_jump7 },     // 1   
