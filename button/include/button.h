@@ -114,7 +114,9 @@ esp_err_t button_set_evt_cb(button_handle_t btn_handle, button_cb_type_t type, b
 
 /**
  * @brief Callbacks invoked as timer events occur while button is pressed.
- *        Example: If a button is configured for 2 sec, 5 sec and 7 sec callbacks and if the button is pressed for 6 sec then 2 sec callback would be invoked at 2 sec event and 5 sec callback would be invoked at 5 sec event
+ *        Example: If a button is configured for 2 sec, 5 sec and 7 sec callbacks and 
+ *                 if the button is pressed for 6 sec then 2 sec callback would be invoked at 2 sec event and 
+ *                 5 sec callback would be invoked at 5 sec event
  *
  * @param btn_handle handle of the button object
  * @param press_sec the callback function would be called if you press the button for a specified period of time
@@ -179,4 +181,12 @@ button_handle_t configure_push_button(int gpio_num, button_active_t level);
 esp_err_t button_set_on_presscount_cb(button_handle_t btn_handle, uint32_t pressed_interval, uint8_t cbs_count, button_cb *cb);
 
 
+/* TODO:
+ *  /buttons
+ *  добавить/удалить/изменить настройки кнопки (nvs)
+ *  gpio для кнопки
+ *  единичное нажатие - функция
+ *  двойное, тройное
+ *  удержание кнопки на время Х
+*/
 #endif
