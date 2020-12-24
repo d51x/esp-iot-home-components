@@ -4,8 +4,8 @@
 
 static const char *TAG = "COLOREFFECT";
 
-#define RGB_EFFECTS_TASK_PRIORITY 6
-#define RGB_EFFECTS_TASK_STACK_SIZE 1024
+#define RGB_EFFECTS_TASK_PRIORITY 10 // 6 слишком мало 
+#define RGB_EFFECTS_TASK_STACK_SIZE 512
 
   // current effect
 static effects_t* effects = NULL;
@@ -24,25 +24,27 @@ void effects_stop_effect();
 effects_t* effects_init(void *rgbctrl, effect_set_color_hsv_f *cb) {
     effects = calloc(1, sizeof(effects_t));
     effects->rgbctrl = rgbctrl;
-    effects->effect = calloc( COLOR_EFFECTS_MAX, sizeof(effect_t));
+    //effects->effect = calloc( COLOR_EFFECTS_MAX, sizeof(effect_t));
+    effects->effect = calloc( 1, sizeof(effect_t));
     effects->set_color_hsv = cb;
     effects->task = NULL;
     effects->task_cb = NULL;
     effects->effect_id = COLOR_EFFECTS_MAX-1;
     
-    for ( int i = 0; i < COLOR_EFFECTS_MAX; i++) {
-        effect_t *e = effects->effect + i;
-        effect_t *ce = &color_effects[i];
-        strcpy(e->name, ce->name);
-        memcpy(&e->type, &ce->type, sizeof( color_effect_e ));
-        memcpy(&e->fadeup_delay, &ce->fadeup_delay, sizeof(int16_t));
-        memcpy(&e->fadedown_delay, &ce->fadedown_delay, sizeof(int16_t));
-        e->cb = ce->cb;
+    // TODO: понять, зачем мы копируем, если уже есть массив определений color_effects
+    //for ( int i = 0; i < COLOR_EFFECTS_MAX; i++) {
+        effect_t *e = effects->effect;// + i;
+        //effect_t *ce = &color_effects[i];
+        //strcpy(e->name, ce->name);
+        //memcpy(&e->type, &ce->type, sizeof( color_effect_e ));
+        //memcpy(&e->fadeup_delay, &ce->fadeup_delay, sizeof(int16_t));
+        //memcpy(&e->fadedown_delay, &ce->fadedown_delay, sizeof(int16_t));
+        //e->cb = ce->cb;
         e->colors = NULL;
         e->colors_cnt = 0;
         e->hsv.h = 0; e->hsv.s = 100; e->hsv.v = 0;
         e->pe = effects;
-    }
+    //}
 
     effects->set = effects_set_effect;
     effects->set_by_name = effects_set_effect_by_name;
@@ -56,8 +58,9 @@ effects_t* effects_init(void *rgbctrl, effect_set_color_hsv_f *cb) {
 
 void effects_set_effect_by_name(const char  *name ) {
     for (int i=0;i<COLOR_EFFECTS_MAX;i++) {
-        effect_t *e = effects->effect + i;
-        if ( strcmp( e->name, name) == ESP_OK ) {
+        //effect_t *e = effects->effect + i;
+        //if ( strcmp( e->name, name) == ESP_OK ) {
+        if ( strcmp( color_effects[i].name, name) == ESP_OK ) {
             effects->set( i );
             break;
         }
@@ -98,7 +101,18 @@ void effects_set_effect( int8_t id ){
     if ( id < 0 || id >= COLOR_EFFECTS_MAX ) return;
     cleanup_effect_colors(effects);
     
-    effect_t *e = effects->effect + id;
+    effect_t *e = effects->effect;// + id;
+
+    // fill effect from array effects
+    strcpy(e->name, color_effects[id].name);
+    e->type = color_effects[id].type;
+    e->fadeup_delay = color_effects[id].fadeup_delay;   
+    e->fadedown_delay = color_effects[id].fadedown_delay;   
+    e->cb = color_effects[id].cb;   
+        //memcpy(&e->fadeup_delay, &ce->fadeup_delay, sizeof(int16_t));
+        //memcpy(&e->fadedown_delay, &ce->fadedown_delay, sizeof(int16_t));
+        //e->cb = ce->cb;
+
     effects->task_cb = e->cb;
 
     ESP_LOGI(TAG, "%s: %s", __func__, color_effects[id].name);
@@ -251,6 +265,7 @@ void effect_stop(void *arg){
     e->type = STOP;
     //e->hsv.h = 0; e->hsv.s = 0; e->hsv.v = 0;
     //e->pe->set_color_hsv( e->hsv );
+    // TODO: ранее task был запущен, теперь этого не требуется
     while (1) {
         vTaskDelay( 1000 / portTICK_RATE_MS );
     }

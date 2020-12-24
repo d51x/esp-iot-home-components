@@ -114,6 +114,7 @@ static void rgbcontrol_print_data(http_args_t *args)
 
 
     // print RGB sliders block with color box
+    // TODO: decrease buf size from 1024
     char *buf = calloc(1024, sizeof(char));
     rgbcontrol_print_color_sliders(req, buf, rgb_ctrl);
 
@@ -129,17 +130,17 @@ static void rgbcontrol_print_data(http_args_t *args)
     httpd_resp_sendstr_chunk(req, effects_select_start);
     for (int i=0; i < COLOR_EFFECTS_MAX; i++ ) 
     {
-        effect_t *e = ee->effect + i;
+        effect_t *e = ee->effect;// + i;
         memset(buf, 0, 1024);
         sprintf(buf, effects_item
                                         , i
                                         , (ee->effect_id == i || ( i == COLOR_EFFECTS_MAX-1 && ee->effect_id == -1) ) ? "selected=\"selected\" " : ""
-                                        , e->name);
+                                        , color_effects[i].name);
         httpd_resp_sendstr_chunk(req, buf);
     }
     //strcat(data, effects_select_end);
     httpd_resp_sendstr_chunk(req, effects_select_end);
-    effect_t *e = ee->effect + ee->effect_id;
+    //effect_t *e = ee->effect + ee->effect_id;
     #endif
 
     //strcat(data, html_block_rgb_control_end);
