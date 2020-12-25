@@ -12,14 +12,17 @@ static const char *TAG = "MQTT";
 #define PARAM_MQTT_TOPIC_BASE "base"
 
 #define MQTT_DEICE_NAME_LENGTH TCPIP_HOSTNAME_MAX_SIZE + MQTT_CFG_LOGIN_LENGTH + 2
-int retry_num = 0;
-int reconnect_count = 0;
+uint32_t retry_num = 0;
+uint32_t reconnect_count = 0;
 
 esp_mqtt_client_handle_t mqtt_client = NULL;
 mqtt_config_t _mqtt_cfg;
 char *_mqtt_dev_name[MQTT_DEICE_NAME_LENGTH];
 
 TaskHandle_t xHanldePublishAll = NULL;
+
+//TimerHandle_t xMQTTReconnectTimer;
+//xWiFiReconnectTimer = xTimerCreate( "xWiFiReconnectTimer", WIFI_RECONNECT_DELAY / portTICK_RATE_MS, pdTRUE, NULL, &vReconnectWiFiCallback );
 
 mqtt_send_t *mqtt_send;
 mqtt_recv_t *mqtt_recv;
@@ -94,7 +97,7 @@ static void mqtt_start_publish_task()
 
 static void mqtt_stop_publish_task()
 {
-    if ( xHanldePublishAll ) {
+    if ( xHanldePublishAll != NULL ) {
         vTaskDelete(xHanldePublishAll);
         xHanldePublishAll = NULL;
     }
@@ -119,12 +122,11 @@ esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
             // mqtt_keep_alive_task
             // mqtt_received_task
             mqtt_start_publish_task();
+            // stop reconnect timer
             break;
         case MQTT_EVENT_DISCONNECTED:
                 ESP_LOGI(TAG, "MQTT_EVENT_DISCONNECTED");
                 mqtt_state = 0;
-                mqtt_stop_publish_task();                
-                // TODO: save status mqtt and counters
             break;
 
         case MQTT_EVENT_SUBSCRIBED:
@@ -294,6 +296,10 @@ static void mqtt_publish_generic(const char *_topic, const char *payload) {
         ESP_LOGE(TAG, "mqtt_client is not initialized");
         return;
     }
+    if ( mqtt_state != 1) {
+        ESP_LOGW(TAG, "mqtt client disconneted. publish disabled for topic %s", _topic);
+        return;
+    }
     char topic[32];
     strcpy( topic, _mqtt_dev_name /*MQTT_DEVICE*/ );
     //strcpy( topic + strlen( topic ), _topic);
@@ -305,12 +311,16 @@ static void mqtt_publish_generic(const char *_topic, const char *payload) {
 void mqtt_publish_all_task(void *arg){
     uint32_t delay_ms = _mqtt_cfg.send_interval*1000;
     while (1) {
+        if ( mqtt_state == 1)
+        {
+            mqtt_publish_device_uptime();
+            mqtt_publish_device_freemem();
+            mqtt_publish_device_rssi();
 
-        mqtt_publish_device_uptime();
-        mqtt_publish_device_freemem();
-        mqtt_publish_device_rssi();
-
-        mqtt_publish_custom_registered_topics();
+            mqtt_publish_custom_registered_topics();
+        } else {
+            ESP_LOGW(TAG, "%s paused, waiting mqtt connection...", __func__ );
+        }
 
         vTaskDelay( delay_ms / portTICK_RATE_MS);
     }

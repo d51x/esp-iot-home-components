@@ -109,9 +109,9 @@ static void mqtt_print_debug(http_args_t *args)
 
     httpd_resp_sendstr_chunk_fmt(req, "<br>MQTT: <BR>"
     "status: %s<br>"
-    "reconnects: %d<br>"
+    "reconnects: %d / errors: %d <br>"
     , mqtt_state ? "connected" : "disconnected"
-    , mqtt_reconnects
+    , mqtt_reconnects-1, mqtt_error_count
     ); 
 }
 

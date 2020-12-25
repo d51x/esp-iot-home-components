@@ -9,7 +9,7 @@ static const char *TAG = "WIFI";
 #define WIFI_RETRY_COUNT 50  // после истечения попыток переключиться в режим AP_MODE, а если в нем не было подключений в течении Х минут, попробовать еще раз подключиться к SSID
 #define WIFI_RECONNECT_DELAY 5000
 
-static int retry_num = 0;
+static uint32_t retry_num = 0;
 static uint32_t reconnect_count = 0;
 
 
@@ -36,6 +36,7 @@ static void wifi_set_host_name(){
     wifi_cfg->mode = WIFI_MODE_STA;
     free(hostname);
 }
+
 static void wifi_ap_set_ip()
 {
     ESP_LOGD(TAG, "function %s started", __func__);
@@ -73,19 +74,19 @@ static void event_handler(void* arg, esp_event_base_t event_base, int32_t event_
 {
     if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) 
     {
-        ESP_LOGD(TAG, "WIFI_EVENT: STA_START");
+        ESP_LOGI(TAG, "WIFI_EVENT: STA_START");
         wifi_connect();
     } 
     else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) 
     {
-        ESP_LOGD(TAG, "WIFI_EVENT: STA_DISCONNECTED");
+        ESP_LOGI(TAG, "WIFI_EVENT: STA_DISCONNECTED");
         
         reconnect_count++;
-        ESP_LOGD(TAG, "Reconnects: %d", reconnect_count);
+        ESP_LOGI(TAG, "Reconnects: %d", reconnect_count);
         
         if (xWiFiReconnectTimer != NULL && xTimerIsTimerActive(xWiFiReconnectTimer) == pdFALSE ) 
         {
-            ESP_LOGD(TAG, "Reconnect WiFi timer started");
+            ESP_LOGI(TAG, "Reconnect WiFi timer started");
             xTimerStart(xWiFiReconnectTimer, 0);
         }
         xEventGroupClearBits(xWiFiEventGroup, WIFI_CONNECTED_BIT);
@@ -102,7 +103,7 @@ static void event_handler(void* arg, esp_event_base_t event_base, int32_t event_
     } 
     else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_AP_START) 
     {
-        ESP_LOGD(TAG, "WIFI EVENT: AP_START");
+        ESP_LOGI(TAG, "WIFI EVENT: AP_START");
         wifi_ap_set_ip();
         if ( strcmp(wifi_cfg->hostname, "") == ESP_OK ) 
         {
@@ -134,10 +135,10 @@ static void event_handler(void* arg, esp_event_base_t event_base, int32_t event_
     }
     else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) 
     {
-        ESP_LOGD(TAG, "IP_EVENT: STA_GOT_IP");
+        ESP_LOGI(TAG, "IP_EVENT: STA_GOT_IP");
         if (xWiFiReconnectTimer != NULL && xTimerIsTimerActive(xWiFiReconnectTimer) == pdTRUE ) 
         {
-            ESP_LOGD(TAG, "Reconnect WiFi timer stoped");
+            ESP_LOGI(TAG, "Reconnect WiFi timer stoped");
             xTimerStop(xWiFiReconnectTimer, 0);
         }
 
@@ -191,7 +192,7 @@ void wifi_init()
 
 void wifi_deinit()
 {
-    ESP_LOGD(TAG, "function %s started", __func__);
+    ESP_LOGI(TAG, "function %s started", __func__);
     free(wifi_cfg);
 }
 
@@ -278,8 +279,6 @@ void wifi_init_ap(void) {
 
 void wifi_get_mac(char *mac)
 {
-    //static char mac[6];
-    //char *mac = calloc(1,6);
     if ( wifi_cfg->mode == WIFI_MODE_STA ) {
         esp_read_mac((uint8_t *)mac, ESP_MAC_WIFI_STA);
     }
@@ -287,7 +286,6 @@ void wifi_get_mac(char *mac)
     {
         esp_read_mac( (uint8_t *)mac, ESP_MAC_WIFI_SOFTAP);
     }
-    //return mac;
 }
 
 int8_t wifi_get_rssi(){
