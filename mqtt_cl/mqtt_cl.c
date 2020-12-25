@@ -151,6 +151,13 @@ esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
             // TODO: save status mqtt and counters and last error
             ESP_LOGI(TAG, "MQTT_EVENT_ERROR");
             break;
+        // for latest commits from esp-mqtt    
+        case MQTT_EVENT_ANY:
+            ESP_LOGI(TAG, "MQTT_EVENT_ANY");
+            break;
+        case MQTT_EVENT_DELETED:
+            ESP_LOGW(TAG, "MQTT_EVENT_DELETED");
+            break;
     }
 
     //ESP_LOGI(TAG, "Event handler remaning space: %d", uxTaskGetStackHighWaterMark( NULL ));
