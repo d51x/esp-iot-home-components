@@ -24,6 +24,7 @@ uint8_t led_groups_count = 0;
 
 static void ledcontrol_add_initial_group(ledcontrol_handle_t dev_h)
 {
+    if ( dev_h == NULL ) return;
     if (  led_groups_count == 0 )
     {
         led_groups_count++;
@@ -68,6 +69,7 @@ static void ledcontrol_print_data(http_args_t *args)
 
 void ledcontrol_register_http_print_data(ledcontrol_handle_t dev_h)
 {
+    if ( dev_h == NULL ) return;
     ledcontrol_t *ledc = (ledcontrol_t *)dev_h;
 
     for ( uint8_t i = 0; i < led_groups_count; i++ )
@@ -218,6 +220,7 @@ end:
 
 void ledcontrol_register_http_handler(httpd_handle_t _server, ledcontrol_handle_t dev_h)
 {
+    if ( dev_h == NULL ) return;
     user_ctx_t *ctx = (user_ctx_t *)calloc(1, sizeof(user_ctx_t));
     ctx->args = dev_h;
     add_uri_get_handler( _server, LED_CONTROL_URI, ledcontrol_get_handler, ctx); 
@@ -225,6 +228,7 @@ void ledcontrol_register_http_handler(httpd_handle_t _server, ledcontrol_handle_
 
 void ledcontrol_http_init(httpd_handle_t _server, ledcontrol_handle_t dev_h)
 {
+    if (dev_h == NULL) return;
     ledcontrol_add_initial_group(dev_h);
     ledcontrol_register_http_print_data(dev_h);  
     ledcontrol_register_http_handler(_server, dev_h);
@@ -232,6 +236,7 @@ void ledcontrol_http_init(httpd_handle_t _server, ledcontrol_handle_t dev_h)
 
 void ledcontrol_http_add_group(ledcontrol_handle_t dev_h, const char *title, uint8_t num, uint8_t priority)
 {
+    if ( dev_h == NULL ) return;
     ledcontrol_add_initial_group(dev_h);
 
     uint8_t i = 0;

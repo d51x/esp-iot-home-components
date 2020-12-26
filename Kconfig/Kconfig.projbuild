@@ -389,11 +389,11 @@ menu "Project config"
                 help
                     Enable LED Control by HTTP GET and web page sliders of channels
 
-            # if LED_CHANNELS_COUNT > 2
+            if LED_CHANNELS_COUNT > 2
             config RGB_CONTROLLER
                 bool "Enable RBG Controller + mqtt"
-                default n if LED_CHANNELS_COUNT < 3
-                default y if LED_CHANNELS_COUNT > 2
+                default n # if LED_CHANNELS_COUNT < 3
+                #default y if LED_CHANNELS_COUNT > 2
                 depends on LED_CONTROLLER
                 help
                     Enable RGB Controller, more convinient control of 3 LED Channels via MQTT 
@@ -442,7 +442,7 @@ menu "Project config"
                         depends on RGB_EFFECTS
                         help
                             Enable HTTP GET and web select input for control RGB Effects                          
-            # endif
+            endif
     endmenu
 
     menu "Sensors"

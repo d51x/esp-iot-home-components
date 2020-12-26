@@ -51,6 +51,7 @@ void ledcontrol_mqtt_recv_cb(char *buf, void *args)
 
 void ledcontrol_mqtt_init(ledcontrol_handle_t dev_h)
 {
+    if ( dev_h == NULL ) return;
     ledcontrol_t *ledc = (ledcontrol_t *)dev_h;
 
     for (uint8_t i = 0; i < ledc->led_cnt; i++ ) {   
