@@ -30,6 +30,9 @@ extern const char *html_block_led_control_item;
 void ledcontrol_register_http_print_data(ledcontrol_handle_t dev_h);
 void ledcontrol_register_http_handler(httpd_handle_t _server, ledcontrol_handle_t dev_h);
 void ledcontrol_http_init(httpd_handle_t _server, ledcontrol_handle_t dev_h);
+
+// добавить новую группу (num, title, priority) или изменить существующую по num
+// num - номер группы
 void ledcontrol_http_add_group(ledcontrol_handle_t dev_h, const char *title, uint8_t num, uint8_t priority);
 
 #endif

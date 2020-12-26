@@ -76,7 +76,6 @@ ledcontrol_handle_t* ledcontrol_create(uint32_t freq_hz, uint8_t channel_cnt)
   // регистрация канала
 esp_err_t ledcontrol_register_channel(ledcontrol_channel_t led_channel)
 {
-    
     if ( ledc == NULL ) {
         ESP_LOGE(TAG, "Led controller is not initialized yet.");
         return ESP_FAIL;
@@ -88,7 +87,6 @@ esp_err_t ledcontrol_register_channel(ledcontrol_channel_t led_channel)
     }
 
     uint8_t ch = led_channel.channel;
-    
     memcpy( &ledc->channels[ ch ], &led_channel, sizeof(ledcontrol_channel_handle_t));
     ledc->channels[ ch ].duty = 0;
     ledc->channels[ ch ].bright_tbl = led_channel.bright_tbl;
@@ -413,4 +411,20 @@ void ledcontrol_all_fade_to_on(uint16_t duty_to, uint16_t duty_delay) {
     ledcontrol_all_fade(0, duty_to, duty_delay);
 }
 
+void ledcontrol_channel_set_name(ledcontrol_channel_t *channel, const char *name)
+{
+    //channel->name = name;
+    ledc->channels[ channel->channel ].name = name; //channel->name;
+}
+
+void ledcontrol_channel_set_pin(ledcontrol_channel_t *channel, uint8_t pin)
+{
+    //channel->pin = pin;
+    ledc->channels[ channel->channel ].pin = pin;
+}
+
+void ledcontrol_channel_set_group(ledcontrol_channel_t *channel, uint8_t group_id)
+{
+    ledc->channels[ channel->channel ].group = group_id;
+}
 #endif

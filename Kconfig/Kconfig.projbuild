@@ -302,11 +302,85 @@ menu "Project config"
     endmenu
     
     menu "LED Controller"
+
         config LED_CONTROLLER
             bool "Enable LED Controller"
             default n
             help
                 Enable LED Controller
+
+            config LED_CHANNELS_COUNT
+                int "Led controller channels count"
+                range 0 5
+                default 1
+                depends on LED_CONTROLLER
+                help
+                    Led controller channels count
+
+                if LED_CHANNELS_COUNT > 0
+                config LED_CHANNEL0_GPIO_EN
+                    bool
+                    default y 
+                endif
+
+                if LED_CHANNELS_COUNT > 1
+                config LED_CHANNEL1_GPIO_EN
+                    bool
+                    default y 
+                endif
+
+                if LED_CHANNELS_COUNT > 2
+                config LED_CHANNEL2_GPIO_EN
+                    bool
+                    default y 
+                endif
+
+                if LED_CHANNELS_COUNT > 3
+                config LED_CHANNEL3_GPIO_EN
+                    bool
+                    default y 
+                endif
+
+                if LED_CHANNELS_COUNT > 4
+                config LED_CHANNEL4_GPIO_EN
+                    bool
+                    default y 
+                endif
+
+                    config LED_CHANNEL0_GPIO
+                        int "Led Channel0 GPIO"
+                        default 0
+                        depends on LED_CHANNEL0_GPIO_EN
+                        help
+                            Led Channel0 GPIO
+
+                    config LED_CHANNEL1_GPIO
+                        int "Led Channel1 GPIO"
+                        default 0
+                        depends on LED_CHANNEL1_GPIO_EN
+                        help
+                            Led Channel1 GPIO                        
+
+                    config LED_CHANNEL2_GPIO
+                        int "Led Channel2 GPIO"
+                        default 0
+                        depends on LED_CHANNEL2_GPIO_EN
+                        help
+                            Led Channel2 GPIO
+
+                    config LED_CHANNEL3_GPIO
+                        int "Led Channel3 GPIO"
+                        default 0
+                        depends on LED_CHANNEL3_GPIO_EN
+                        help
+                            Led Channel3 GPIO
+
+                    config LED_CHANNEL4_GPIO
+                        int "Led Channel4 GPIO"
+                        default 0
+                        depends on LED_CHANNEL4_GPIO_EN
+                        help
+                            Led Channel4 GPIO
 
             config LED_CONTROL_HTTP
                 bool "Channel sliders on page and HTTP GET control"
@@ -315,12 +389,38 @@ menu "Project config"
                 help
                     Enable LED Control by HTTP GET and web page sliders of channels
 
+            # if LED_CHANNELS_COUNT > 2
             config RGB_CONTROLLER
                 bool "Enable RBG Controller + mqtt"
-                default n
+                default n if LED_CHANNELS_COUNT < 3
+                default y if LED_CHANNELS_COUNT > 2
                 depends on LED_CONTROLLER
                 help
                     Enable RGB Controller, more convinient control of 3 LED Channels via MQTT 
+
+                config RGB_RED_CHANNEL
+                    int "Red channel number"
+                    range 0 5
+                    default 0
+                    depends on RGB_CONTROLLER
+                    help
+                        Red channel number
+
+                config RGB_GREEN_CHANNEL
+                    int "Green channel number"
+                    range 0 5
+                    default 1
+                    depends on RGB_CONTROLLER
+                    help
+                        Green channel number
+                        
+                config RGB_BLUE_CHANNEL
+                    int "Blue channel number"
+                    range 0 5
+                    default 2
+                    depends on RGB_CONTROLLER
+                    help
+                        Blue channel number
 
                 config RGB_CONTROLLER_HTTP
                     bool "Enable HTTP GET for RGB controller"
@@ -342,6 +442,7 @@ menu "Project config"
                         depends on RGB_EFFECTS
                         help
                             Enable HTTP GET and web select input for control RGB Effects                          
+            # endif
     endmenu
 
     menu "Sensors"

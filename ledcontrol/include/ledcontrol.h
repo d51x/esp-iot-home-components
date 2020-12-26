@@ -168,5 +168,9 @@ to control via http get request you need add a get request handler
     ip/ledc?allon=1
     ip/ledc?alloff=1
 */
+
+void ledcontrol_channel_set_name(ledcontrol_channel_t *channel, const char *name);
+void ledcontrol_channel_set_pin(ledcontrol_channel_t *channel, uint8_t pin);
+void ledcontrol_channel_set_group(ledcontrol_channel_t *channel, uint8_t group_id);
 #endif
 #endif

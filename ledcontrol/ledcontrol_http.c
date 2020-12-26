@@ -234,19 +234,25 @@ void ledcontrol_http_add_group(ledcontrol_handle_t dev_h, const char *title, uin
 {
     ledcontrol_add_initial_group(dev_h);
 
-    for (uint8_t i = 0; i < led_groups_count; i++) 
+    uint8_t i = 0;
+    for ( i = 0; i < led_groups_count; i++ ) 
     {
         if ( strcmp(led_groups[i].title, title) == 0 && led_groups[i].dev_h == dev_h)
-            return;
+        {
+            // found, change name and priority
+            break;
+        }    
     }
-
-    led_groups_count++;
-    led_groups = (ledcontrol_group_t *) realloc( led_groups, sizeof(ledcontrol_group_t) * led_groups_count );
-
-    led_groups[ led_groups_count - 1 ].title = title;
-    led_groups[ led_groups_count - 1 ].group = num;
-    led_groups[ led_groups_count - 1 ].dev_h = dev_h;
-    led_groups[ led_groups_count - 1 ].priority = priority;
+    
+    if ( i == led_groups_count )
+    {
+        led_groups_count++;
+        led_groups = (ledcontrol_group_t *) realloc( led_groups, sizeof(ledcontrol_group_t) * led_groups_count );
+    }
+    led_groups[ i ].title = title;
+    led_groups[ i ].group = num;
+    led_groups[ i ].dev_h = dev_h;
+    led_groups[ i ].priority = priority;
 
 }
 
