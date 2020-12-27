@@ -14,9 +14,7 @@ void effects_set_effect_by_name(const char  *name );
 void effects_set_effect( int8_t id );
 void _manage_color_effect(effect_t *e);
 
-void effects_next_effect();
-void effects_prev_effect();
-void effects_stop_effect();
+
 
 
 

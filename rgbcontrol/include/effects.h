@@ -33,6 +33,11 @@ typedef void (* effect_set_color_hsv_f)(color_hsv_t hsv);
 typedef void (* effect_set_effect_by_name_f)(const char  *name );  
 typedef void (* effect_set_effect_f)(int8_t id);  
   
+void effects_next_effect();
+void effects_prev_effect();
+void effects_stop_effect();
+void effects_set_effect_by_name(const char  *name );
+void effects_set_effect( int8_t id );
 
 typedef enum {
     STOP,
