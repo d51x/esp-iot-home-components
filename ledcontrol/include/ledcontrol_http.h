@@ -12,7 +12,8 @@
 
 #ifdef CONFIG_LED_CONTROL_HTTP
 
-#define LED_CONTROL_URI "/ledc"
+#define LED_CONTROL_TAG "ledc"
+#define LED_CONTROL_URI "/"LED_CONTROL_TAG 
 #define LED_CONTROL_HANDLERS_COUNT 1
 
 typedef struct ledcontrol_group {

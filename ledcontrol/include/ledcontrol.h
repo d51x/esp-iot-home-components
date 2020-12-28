@@ -19,6 +19,9 @@
 
 #ifdef CONFIG_LED_CONTROLLER
 
+#define LED_CHANNELS_COUNT CONFIG_LED_CHANNELS_COUNT
+
+
 #define LEDCONTROL_CHANNEL_MAX 5
 #define LEDCONTROL_FREQ_MIN 100
 #define LEDCONTROL_FREQ_MAX 500
@@ -99,6 +102,13 @@ struct ledcontrol_channel {
 		uint8_t group;
 };
 
+typedef struct {
+	uint8_t channel;
+	uint8_t pin;
+	bool inverted;
+	char title[24];
+} ledcontrol_nvs_data_t;
+
 struct ledcontrol {
 	uint16_t freq;				// частота pwm
 	uint8_t led_cnt;			// кол-во каналов
@@ -172,5 +182,13 @@ to control via http get request you need add a get request handler
 void ledcontrol_channel_set_name(ledcontrol_channel_t *channel, const char *name);
 void ledcontrol_channel_set_pin(ledcontrol_channel_t *channel, uint8_t pin);
 void ledcontrol_channel_set_group(ledcontrol_channel_t *channel, uint8_t group_id);
+
+// init channels "ch[]" and return of created number of channels
+uint8_t ledcontrol_init_channels(ledcontrol_channel_t **ch);
+void ledcontrol_reinit(ledcontrol_handle_t* dev_h, uint8_t cnt, ledcontrol_channel_t **ch);
+
+esp_err_t ledcontrol_load_nvs(uint8_t *cnt, ledcontrol_channel_t **ch);
+esp_err_t ledcontrol_save_nvs(uint8_t cnt, const ledcontrol_nvs_data_t *data);
+
 #endif
 #endif

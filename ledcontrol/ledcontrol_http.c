@@ -3,15 +3,22 @@
 
 #ifdef CONFIG_LED_CONTROL_HTTP
 
-
+static const char *ledc_title ICACHE_RODATA_ATTR = "Led channels Config";
 const char *ledc_data ICACHE_RODATA_ATTR = "ledc_data%d";
+
+const char *html_page_config_ledc_count ICACHE_RODATA_ATTR = "Channels count";
+const char *html_page_config_ledc_channel ICACHE_RODATA_ATTR = "Channel %d (GPIO)";
+const char *html_page_config_ledc_channel_gpio_name ICACHE_RODATA_ATTR = "g_ch%d";
+const char *html_page_config_ledc_channel_title_name ICACHE_RODATA_ATTR = "t_ch%d";
+const char *html_page_config_ledc_count_name ICACHE_RODATA_ATTR = "cnt";
+
 const char *html_block_led_control_item ICACHE_RODATA_ATTR = 
     "<p>"
         "<span class='lf'><b>%s</b></span>"                 // s - title,
         //"<span><input type=\"range\" max=\"255\" name=\"ledc%d\" value=\"%d\"></span>"          // slider, d - channel id, d - duty
         "<span class='rh'>"
-            "<input type=\"range\" max=\"255\" name=\"ledc%d\" value=\"%d\" data-uri=\"ledc?ch=%d&duty=\" onchange=\"slider(this.value, this.name, this.dataset.uri);\" />"
-            "<i id=\"ledc%d\" >%d</i>"
+            "<input type=\"range\" max=\"255\" name=\""LED_CONTROL_TAG"%d\" value=\"%d\" data-uri=\""LED_CONTROL_TAG"?ch=%d&duty=\" onchange=\"slider(this.value, this.name, this.dataset.uri);\" />"
+            "<i id=\""LED_CONTROL_TAG"%d\" >%d</i>"
         "</span>"              // d - channel id, d - duty
     "</p>"; 
 
@@ -21,6 +28,119 @@ static const char* TAG = "LEDCHTTP";
 
 ledcontrol_group_t *led_groups;
 uint8_t led_groups_count = 0;
+
+static void ledc_print_options(http_args_t *args)
+{
+    ESP_LOGI( TAG, LOG_FMT());
+
+    httpd_req_t *req = (httpd_req_t *)args->req;
+    ledcontrol_t *ledc = (ledcontrol_t *)args->dev;
+
+
+    httpd_resp_sendstr_chunk_fmt(req, html_block_data_header_start, ledc_title);
+    // ==========================================================================    
+    // print form with options
+    httpd_resp_sendstr_chunk(req, html_block_data_form_start);
+    
+    
+    // кол-во каналов
+    char value[4];
+    itoa(ledc->led_cnt, value, 10);
+    httpd_resp_sendstr_chunk_fmt(req, html_block_data_form_item_label_edit
+                                    , html_page_config_ledc_count // %s label
+                                    , html_page_config_ledc_count_name   // %s name
+                                    , value   // %d value
+    );
+        
+    for ( uint8_t i = 0; i < ledc->led_cnt; i++)
+    {
+        char label[ strlen(html_page_config_ledc_channel)+1];
+        char param[4];
+        sprintf(label, html_page_config_ledc_channel, i);
+        sprintf(param, html_page_config_ledc_channel_gpio_name, i);
+        itoa(ledc->channels[i].pin, value, 10);
+	    httpd_resp_sendstr_chunk_fmt(req, html_block_data_form_item_label_edit
+                                        , label // %s label
+                                        , param   // %s name
+                                        , value   // %d value
+        );
+    }
+
+    httpd_resp_sendstr_chunk_fmt(req, html_block_data_form_submit, LED_CONTROL_TAG);
+    httpd_resp_sendstr_chunk(req, html_block_data_form_end);
+    // ==========================================================================    
+    httpd_resp_sendstr_chunk(req, html_block_data_end);    
+    httpd_resp_sendstr_chunk(req, html_block_data_end);    
+}
+
+static void ledc_http_process_params(httpd_req_t *req, void *args)
+{
+    ESP_LOGI( TAG, LOG_FMT());
+    
+    ledcontrol_t *ledc = (ledcontrol_t *)((http_args_t *)args)->dev;
+
+	if ( http_get_has_params(req) == ESP_OK) 
+	{
+        char param[50];
+        if ( http_get_key_str(req, "st", param, sizeof(param)) == ESP_OK ) {
+            // сверим что пришло в st
+            if ( strcmp(param, LED_CONTROL_TAG) == 0 ) {
+                // продолжим обработку параметров    
+
+                // кол-во каналов  html_page_config_ledc_count_name
+                if ( http_get_key_str(req, html_page_config_ledc_count_name, param, sizeof(param)) == ESP_OK ) {
+                    // есть параметр
+                    uint8_t cnt = atoi(param);
+                    ESP_LOGI(TAG, LOG_FMT("received channels count %d"), cnt);
+
+                    ledcontrol_nvs_data_t *data = NULL;
+                    if ( cnt > 0 ) data = calloc(cnt, sizeof(ledcontrol_nvs_data_t));
+
+                    char param[10];
+                    uint8_t value;
+                    for ( uint8_t i = 0; i < cnt; i++)
+                    {
+                        data[i].channel = i;
+                        sprintf(param, html_page_config_ledc_channel_gpio_name, i);
+                        if ( http_get_key_uint8(req, param, &data[i].pin) != ESP_OK ) 
+                        {
+                            ESP_LOGE(TAG, "gpio for channel %d is missing", i);
+                            continue;
+                        }
+
+                        ESP_LOGI(TAG, LOG_FMT("received gpio %d for channel %d"), data[i].pin, data[i].channel);
+
+                        /* 
+                        TODO: "inverted" param
+                         TODO: "title" param
+                        */ 
+                    }
+
+                    ledcontrol_save_nvs(cnt, data);
+                    // TODO: reinitialize ledcontroller
+                    // ledcontrol_destroy( ledc );
+                    // ledcontrol_create()
+                    // ledc->register_channel
+                    // или ledc->led_cnt =
+                    // ledc->channels = realloc(...)
+                    free(data);
+                    
+                    //ledcontrol_channel_t *ledc_channels;
+                    
+                    // It works!!!! but...
+                    //uint8_t led_ch_cnt = ledcontrol_init_channels(&ledc->channels);
+                    //ledcontrol_reinit(ledc, led_ch_cnt, &ledc->channels);
+                    
+                    // need remove all callbacks and register again
+                    //ledcontrol_mqtt_init(ledc);
+                    //free(ledc_channels);
+                }
+                // else {} / 
+            }
+            //else { }
+        }
+    }    
+}
 
 static void ledcontrol_add_initial_group(ledcontrol_handle_t dev_h)
 {
@@ -72,6 +192,7 @@ void ledcontrol_register_http_print_data(ledcontrol_handle_t dev_h)
     if ( dev_h == NULL ) return;
     ledcontrol_t *ledc = (ledcontrol_t *)dev_h;
 
+    // регистрация отображения блоков групп каналов на главной
     for ( uint8_t i = 0; i < led_groups_count; i++ )
     {
         // проверить, что группа не пустая
@@ -94,6 +215,10 @@ void ledcontrol_register_http_print_data(ledcontrol_handle_t dev_h)
         }
     }
     
+    // регистрация блока настроек в /tools
+    http_args_t *p = calloc(1,sizeof(http_args_t));
+    p->dev = dev_h;
+    register_print_page_block( "ledc_opt", PAGES_URI[ PAGE_URI_TOOLS], 3, ledc_print_options, p, ledc_http_process_params, p );
 }
 
 esp_err_t ledcontrol_get_handler(httpd_req_t *req)
@@ -211,6 +336,11 @@ esp_err_t ledcontrol_get_handler(httpd_req_t *req)
             httpd_resp_sendstr_chunk(req, "}");            
         }
         
+    }
+    else
+    {
+        // no params, just show config page
+
     }
 end:
 	//httpd_resp_send_chunk(req, NULL, 0);
