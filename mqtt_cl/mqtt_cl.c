@@ -382,6 +382,37 @@ void mqtt_add_periodic_publish_callback( const char *topic, func_mqtt_send_cb fn
 
 }
 
+void mqtt_del_periodic_publish_callback( const char *topic, func_mqtt_send_cb fn_cb, void *args)
+{
+    uint8_t i = 0;
+    for ( i = 0; i < mqtt_send_cnt; i++) 
+    {
+        if (strcmp(mqtt_send[i].topic, topic) == 0 && mqtt_send[i].fn_cb == fn_cb) 
+        {
+            // found, delete
+            break;
+        }    
+    }
+
+    if ( i !=  mqtt_send_cnt ) {
+        mqtt_send_t *_temp = calloc(mqtt_send_cnt-1, sizeof(mqtt_send_t));
+        uint8_t k = 0;
+        for ( uint8_t j = 0; j < mqtt_send_cnt; j++ )
+        {
+            if ( i != j ) {
+                memcpy( &_temp[k], &mqtt_send[j], sizeof(mqtt_send_t));    
+                k++;
+            } else {
+                free(mqtt_send[j].args);
+            }
+        }
+        mqtt_send_cnt--;
+        mqtt_send = realloc(mqtt_send, mqtt_send_cnt * sizeof(mqtt_send_t));
+        memcpy(mqtt_send, _temp, mqtt_send_cnt * sizeof(mqtt_send_t));
+        free(_temp);
+    }
+}
+
 void mqtt_add_receive_callback( const char *topic, uint8_t inner_topic, func_mqtt_recv_cb fn_cb, void *args)
 {
     for ( uint8_t i = 0; i < mqtt_recv_cnt; i++) 
@@ -412,6 +443,37 @@ void mqtt_add_receive_callback( const char *topic, uint8_t inner_topic, func_mqt
     }
 }
 
+void mqtt_del_receive_callback( const char *topic, uint8_t inner_topic, func_mqtt_recv_cb fn_cb, void *args)
+{
+    uint8_t i = 0;
+    for ( i = 0; i < mqtt_recv_cnt; i++) 
+    {
+        if (strcmp(mqtt_recv[i].topic, topic) == 0 && mqtt_recv[i].fn_cb == fn_cb) 
+        {
+            // found, delete
+            break;
+        }    
+    }   
+
+    if ( i !=  mqtt_recv_cnt ) {
+        mqtt_recv_t *_temp = calloc(mqtt_recv_cnt-1, sizeof(mqtt_recv_t));
+        uint8_t k = 0;
+        for ( uint8_t j = 0; j < mqtt_recv_cnt; j++ )
+        {
+            if ( i != j ) {
+                memcpy( &_temp[k], &mqtt_recv[j], sizeof(mqtt_recv_t));    
+                k++;
+            } else {
+                free(mqtt_recv[j].args);
+            }
+        }
+        mqtt_recv_cnt--;
+        mqtt_recv = realloc(mqtt_recv, mqtt_recv_cnt * sizeof(mqtt_recv_t));
+        memcpy(mqtt_recv, _temp, mqtt_recv_cnt * sizeof(mqtt_recv_t));
+        free(_temp);
+    }
+
+}
 
 static void mqtt_subscribe_topics(esp_mqtt_client_handle_t client)
 {

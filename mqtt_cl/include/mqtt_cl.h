@@ -90,6 +90,7 @@ void mqtt_subscribe_topic(const char *topic);
 // название топика не длинее TOPIC_END_NAME_LENGTH - название без учета  "login/hostname/""
 // зарегистрировать функцию колбека, которая будет вызвана при периодической отправки данных с настроенным интервалом
 void mqtt_add_periodic_publish_callback( const char *topic, func_mqtt_send_cb fn_cb, void *args);
+void mqtt_del_periodic_publish_callback( const char *topic, func_mqtt_send_cb fn_cb, void *args);
 
 // зарегистрировать функцию колбека, которая будет вызвана при получении данных в указанном топике
 // topic должен содержать часть пути после  "login/hostname"
@@ -103,3 +104,5 @@ void mqtt_add_periodic_publish_callback( const char *topic, func_mqtt_send_cb fn
   *
   */
 void mqtt_add_receive_callback( const char *topic, uint8_t inner_topic, func_mqtt_recv_cb fn_cb, void *args);  
+void mqtt_del_receive_callback( const char *topic, uint8_t inner_topic, func_mqtt_recv_cb fn_cb, void *args);  
+
