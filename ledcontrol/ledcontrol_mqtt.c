@@ -54,17 +54,25 @@ void ledcontrol_mqtt_init(ledcontrol_handle_t dev_h)
     if ( dev_h == NULL ) return;
     ledcontrol_t *ledc = (ledcontrol_t *)dev_h;
 
+    char t[20];
+
+    for (uint8_t i = 0; i < ledc->led_cnt; i++ )
+    {
+        sprintf(t, LEDCONTROL_MQTT_SEND_TOPIC, i);
+        mqtt_del_periodic_publish_callback(t, ledcontrol_mqtt_periodic_send_cb, NULL);
+        mqtt_del_receive_callback(t, 1, ledcontrol_mqtt_recv_cb, NULL);
+    }
+
     for (uint8_t i = 0; i < ledc->led_cnt; i++ ) {   
         ledcontrol_mqtt_t *p = (ledcontrol_mqtt_t *) calloc(1, sizeof(ledcontrol_mqtt_t));
         p->dev_h = dev_h;
         p->channel = i;
 
-        char t[20];
         sprintf(t, LEDCONTROL_MQTT_SEND_TOPIC, i);
         mqtt_add_periodic_publish_callback( t, ledcontrol_mqtt_periodic_send_cb, (ledcontrol_mqtt_t *)p); 
 
         sprintf(t, LEDCONTROL_MQTT_RECV_TOPIC, i);
-        mqtt_add_receive_callback(t, 1, ledcontrol_mqtt_recv_cb, (ledcontrol_mqtt_t *)p);                   
+        mqtt_add_receive_callback(t, 1, ledcontrol_mqtt_recv_cb, (ledcontrol_mqtt_t *)p);                
     }
 }
 

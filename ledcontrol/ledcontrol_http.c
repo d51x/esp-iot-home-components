@@ -1,5 +1,6 @@
 #include "ledcontrol_http.h"
 #include "http_page_tpl.h"
+#include "ledcontrol_mqtt.h"
 
 #ifdef CONFIG_LED_CONTROL_HTTP
 
@@ -127,12 +128,10 @@ static void ledc_http_process_params(httpd_req_t *req, void *args)
                     
                     //ledcontrol_channel_t *ledc_channels;
                     
-                    // It works!!!! but...
-                    //uint8_t led_ch_cnt = ledcontrol_init_channels(&ledc->channels);
-                    //ledcontrol_reinit(ledc, led_ch_cnt, &ledc->channels);
-                    
-                    // need remove all callbacks and register again
-                    //ledcontrol_mqtt_init(ledc);
+                    // It works!!!! but...  memory leaks ( 80 -200 bytes), каждое пересохранение
+                    uint8_t led_ch_cnt = ledcontrol_init_channels(&ledc->channels);
+                    ledcontrol_reinit(ledc, led_ch_cnt, &ledc->channels);
+                    ledcontrol_mqtt_init(ledc);
                     //free(ledc_channels);
                 }
                 // else {} / 

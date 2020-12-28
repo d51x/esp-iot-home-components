@@ -86,16 +86,23 @@ void ledcontrol_reinit(ledcontrol_handle_t* dev_h, uint8_t cnt, ledcontrol_chann
 {
     ledcontrol_t *dev = (ledcontrol_t *)dev_h;
     dev->led_cnt = cnt;
+    
+    ESP_LOGW(TAG, LOG_FMT("free1: %d"), esp_get_free_heap_size());
     dev->channels = realloc( dev->channels, cnt *sizeof(ledcontrol_channel_t));
+    ESP_LOGW(TAG, LOG_FMT("free2: %d"), esp_get_free_heap_size());
+
     for (uint8_t i = 0; i < cnt; i++)
     {
         dev->register_channel((*ch)[i]);
     }
 
-    pwm_stop(0);
+    ESP_LOGW(TAG, LOG_FMT("free3: %d"), esp_get_free_heap_size());
     pwm_deinit();
+    ESP_LOGW(TAG, LOG_FMT("free4: %d"), esp_get_free_heap_size());
     ledcontrol_init();
+    ESP_LOGW(TAG, LOG_FMT("free5: %d"), esp_get_free_heap_size());
 }
+
 // регистрация канала
 esp_err_t ledcontrol_register_channel(ledcontrol_channel_t led_channel)
 {
