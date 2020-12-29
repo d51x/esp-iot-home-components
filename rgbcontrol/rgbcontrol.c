@@ -2,7 +2,14 @@
 
 #ifdef CONFIG_RGB_CONTROLLER
 
+#include "nvsparam.h"
+
 static const char *TAG = "RGB";
+
+#define RGB_CONTROL_SECTION "rgbctrl"
+#define RGB_CONTROL_PARAM_RED_CHANNEL "redch"
+#define RGB_CONTROL_PARAM_GREEN_CHANNEL "greench"
+#define RGB_CONTROL_PARAM_BLUE_CHANNEL "bluech"
 
 volatile static rgbcontrol_t *rgb_ctrl = NULL;
 
@@ -48,6 +55,17 @@ rgbcontrol_t* rgbcontrol_init(ledcontrol_t *ledc, ledcontrol_channel_t *red, led
     rgb_ctrl->red = *red;
     rgb_ctrl->green = *green;
     rgb_ctrl->blue = *blue;
+
+    if ( rgbcontrol_load_nvs(rgb_ctrl) == ESP_OK ) 
+    {
+        rgb_ctrl->red = rgb_ctrl->ledc->channels[rgb_ctrl->red.channel];
+        rgb_ctrl->green = rgb_ctrl->ledc->channels[rgb_ctrl->green.channel];
+        rgb_ctrl->blue = rgb_ctrl->ledc->channels[rgb_ctrl->blue.channel];
+
+        ledcontrol_channel_set_name(&rgb_ctrl->red, "Red");
+        ledcontrol_channel_set_name(&rgb_ctrl->green, "Green");
+        ledcontrol_channel_set_name(&rgb_ctrl->blue, "Blue");
+    }
 
     rgb_ctrl->hsv.h = 0;
     rgb_ctrl->hsv.s = 0;
@@ -218,5 +236,20 @@ void rgbcontrol_effects_init(rgbcontrol_t *rgbctrl, effects_t* effects)
 }
 #endif
 
+esp_err_t rgbcontrol_load_nvs(rgbcontrol_t* dev)
+{
+    esp_err_t err = nvs_param_u8_load(RGB_CONTROL_SECTION, RGB_CONTROL_PARAM_RED_CHANNEL, &dev->red.channel);
+    err |=  nvs_param_u8_load(RGB_CONTROL_SECTION, RGB_CONTROL_PARAM_GREEN_CHANNEL, &dev->green.channel);   
+    err |=  nvs_param_u8_load(RGB_CONTROL_SECTION, RGB_CONTROL_PARAM_BLUE_CHANNEL, &dev->blue.channel);   
+    return err;
+}
+
+esp_err_t rgbcontrol_save_nvs(const rgbcontrol_t* dev)
+{
+    esp_err_t err = nvs_param_u8_save(RGB_CONTROL_SECTION, RGB_CONTROL_PARAM_RED_CHANNEL, dev->red.channel);
+    err |=  nvs_param_u8_save(RGB_CONTROL_SECTION, RGB_CONTROL_PARAM_GREEN_CHANNEL, dev->green.channel);   
+    err |=  nvs_param_u8_save(RGB_CONTROL_SECTION, RGB_CONTROL_PARAM_BLUE_CHANNEL, dev->blue.channel);   
+    return err;
+}
 
 #endif

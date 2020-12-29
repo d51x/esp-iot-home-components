@@ -154,6 +154,10 @@ now you can change color and make animations with led
     ip/colors?rgb=<r>,<g>,<b>
     ip/colors?hsv=<h>,<s>,<v>
 */
+
+esp_err_t rgbcontrol_load_nvs(rgbcontrol_t* dev);
+esp_err_t rgbcontrol_save_nvs(const rgbcontrol_t* dev);
+
 #endif
 
 #endif
