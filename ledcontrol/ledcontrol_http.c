@@ -32,8 +32,6 @@ uint8_t led_groups_count = 0;
 
 static void ledc_print_options(http_args_t *args)
 {
-    ESP_LOGI( TAG, LOG_FMT());
-
     httpd_req_t *req = (httpd_req_t *)args->req;
     ledcontrol_t *ledc = (ledcontrol_t *)args->dev;
 
@@ -76,8 +74,6 @@ static void ledc_print_options(http_args_t *args)
 
 static void ledc_http_process_params(httpd_req_t *req, void *args)
 {
-    ESP_LOGI( TAG, LOG_FMT());
-    
     ledcontrol_t *ledc = (ledcontrol_t *)((http_args_t *)args)->dev;
 
 	if ( http_get_has_params(req) == ESP_OK) 
@@ -118,18 +114,11 @@ static void ledc_http_process_params(httpd_req_t *req, void *args)
                     }
 
                     ledcontrol_save_nvs(cnt, data);
-                    // TODO: reinitialize ledcontroller
-                    // ledcontrol_destroy( ledc );
-                    // ledcontrol_create()
-                    // ledc->register_channel
-                    // или ledc->led_cnt =
-                    // ledc->channels = realloc(...)
-                    free(data);
-                    
-                    //ledcontrol_channel_t *ledc_channels;
-                    
-                    // It works!!!! but...  memory leaks ( 80 -200 bytes), каждое пересохранение
-                    uint8_t led_ch_cnt = ledcontrol_init_channels(&ledc->channels);
+                      free(data);
+
+                    // It works!!!! but...  тут может быть memory leaks 
+                    uint8_t led_ch_cnt = ledcontrol_init_channels(&ledc->channels); 
+
                     ledcontrol_reinit(ledc, led_ch_cnt, &ledc->channels);
                     ledcontrol_mqtt_init(ledc);
                     //free(ledc_channels);

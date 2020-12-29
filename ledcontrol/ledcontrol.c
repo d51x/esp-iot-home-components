@@ -43,7 +43,6 @@ esp_err_t ledcontrol_http_get_handler(httpd_req_t *req);
 
 ledcontrol_handle_t* ledcontrol_create(uint32_t freq_hz, uint8_t channel_cnt)
 {
-    ESP_LOGW(TAG, LOG_FMT());
     //ledcontrol_load_nvs();
     if ( channel_cnt < 1 || channel_cnt > LEDCONTROL_CHANNEL_MAX) return NULL;
     if ( freq_hz < LEDCONTROL_FREQ_MIN || freq_hz > LEDCONTROL_FREQ_MAX) return NULL;
@@ -87,20 +86,15 @@ void ledcontrol_reinit(ledcontrol_handle_t* dev_h, uint8_t cnt, ledcontrol_chann
     ledcontrol_t *dev = (ledcontrol_t *)dev_h;
     dev->led_cnt = cnt;
     
-    ESP_LOGW(TAG, LOG_FMT("free1: %d"), esp_get_free_heap_size());
     dev->channels = realloc( dev->channels, cnt *sizeof(ledcontrol_channel_t));
-    ESP_LOGW(TAG, LOG_FMT("free2: %d"), esp_get_free_heap_size());
 
     for (uint8_t i = 0; i < cnt; i++)
     {
         dev->register_channel((*ch)[i]);
     }
 
-    ESP_LOGW(TAG, LOG_FMT("free3: %d"), esp_get_free_heap_size());
     pwm_deinit();
-    ESP_LOGW(TAG, LOG_FMT("free4: %d"), esp_get_free_heap_size());
     ledcontrol_init();
-    ESP_LOGW(TAG, LOG_FMT("free5: %d"), esp_get_free_heap_size());
 }
 
 // регистрация канала
@@ -463,7 +457,16 @@ uint8_t ledcontrol_init_channels(ledcontrol_channel_t **channels)
 {
     uint8_t _channels_count = 0;
 
+    if ( *channels != NULL && ledc->led_cnt > 0 ) 
+    {
+        for (uint8_t i = 0; i < ledc->led_cnt; i++)
+        {
+            free((*channels)[i].name);
+        }
+    }
+
     esp_err_t err = ledcontrol_load_nvs(&_channels_count, channels);
+    
     if ( err != ESP_OK )
     {
         // ошибка чтения из nvs, используем дефолтные значения
@@ -471,17 +474,20 @@ uint8_t ledcontrol_init_channels(ledcontrol_channel_t **channels)
         _channels_count = LED_CHANNELS_COUNT;
         if ( LED_CHANNELS_COUNT > 0 )
         {
-            free(*channels);
-            *channels = calloc( _channels_count, sizeof(ledcontrol_channel_t));
+            //free(*channels);
+            *channels = realloc( (*channels), _channels_count * sizeof(ledcontrol_channel_t));
+            //*channels = calloc( _channels_count, sizeof(ledcontrol_channel_t));
 
             for (uint8_t i = 0; i < _channels_count; i++)
             {
                 (*channels)[i].channel = i;
                 //(*channels)[i].group = 1; // по дефолту 0
                 (*channels)[i].bright_tbl = TBL_32B;
-                char str[12];
-                sprintf(str, "Channel %02d", i);
-                (*channels)[i].name = strdup(str);
+
+                //char *s = (*channels)[i].name;
+                (*channels)[i].name = (char *)realloc((*channels)[i].name, 12);
+                sprintf((*channels)[i].name, "Channel %02d", i);
+                //(*channels)[i].name = s;                
             }
 
             #ifdef CONFIG_LED_CHANNEL0_GPIO
@@ -510,14 +516,23 @@ uint8_t ledcontrol_init_channels(ledcontrol_channel_t **channels)
 
 esp_err_t ledcontrol_load_nvs(uint8_t *cnt, ledcontrol_channel_t **ch)
 {
+    
     esp_err_t err = nvs_param_u8_load(LEDCTRL_SECTION, LEDCTRL_PARAM_CNT, cnt);
     if ( err != ESP_OK) 
     {
         ESP_LOGE(TAG, LOG_FMT("Error [%s] read param %s"),esp_err_to_name(err), LEDCTRL_PARAM_CNT);
         return err;
     }
-    free(*ch);
-    *ch = calloc( *cnt, sizeof(ledcontrol_channel_t));
+
+    //free(*ch);
+    if ( *ch != NULL && ledc->led_cnt > 0 ) 
+    {
+        for (uint8_t i = 0; i < ledc->led_cnt; i++)
+        {
+            free((*ch)[i].name);
+        }
+    }
+    *ch = realloc( (*ch), *cnt * sizeof(ledcontrol_channel_t));
 
     uint8_t *buf = calloc(*cnt, sizeof(uint8_t));
     err = nvs_param_load(LEDCTRL_SECTION, LEDCTRL_PARAM_PINS, buf);
@@ -536,9 +551,8 @@ esp_err_t ledcontrol_load_nvs(uint8_t *cnt, ledcontrol_channel_t **ch)
 
         (*ch)[i].bright_tbl = TBL_32B;
 
-        char str[12];
-        sprintf(str, "Channel %02d", i);
-        (*ch)[i].name = strdup(str);        
+        (*ch)[i].name = calloc(1, 12);
+        sprintf( (*ch)[i].name, "Channel %02d", i);
     }
     
     free(buf);
