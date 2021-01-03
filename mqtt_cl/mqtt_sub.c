@@ -237,7 +237,7 @@ static void mqtt_subscriber_del_base_topic(uint8_t base_id)
     uint8_t k = 0;
     for (uint8_t i = 0; i < base_topics_count; i++)
     {
-        if ( base_topics[i].id != base_id )
+        if ( base_topics[i].id != base_id && base_id != i)
         {
             _base_topics[k].id = base_topics[i].id;
             strcpy(_base_topics[k].base,base_topics[i].base );
@@ -584,14 +584,21 @@ esp_err_t mqtt_subscriber_post_handler(httpd_req_t *req, void *args)
         error |= res;
 
         if ( res != ESP_OK) 
-            ESP_LOGE(TAG, esp_err_to_name( error ));  
+            ESP_LOGE(TAG, esp_err_to_name( res ));  
 
         res = httpd_query_key_value(buf, "base", _base_topic, MQTT_SUBSCRIBER_BASE_TOPIC_MAX_LENGTH);
         error |= res;
-        
+
+        res = httpd_query_key_value(buf, "act", _action, 4);
+        error |= res;
+
         if ( error == ESP_OK ) {
             uint8_t action = atoi(_action);
             if ( action == 0 ) {
+
+                res = httpd_query_key_value(buf, "endpt", _endpoints, MQTT_SUBSCRIBER_END_POINT_MAX_LENGTH);
+                error |= res;
+
                 // добавляем
                 res = mqtt_subscriber_add(_base_topic, _endpoints); 
                 error |= res;
