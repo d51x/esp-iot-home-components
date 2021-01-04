@@ -576,7 +576,7 @@ esp_err_t mqtt_subscriber_post_handler(httpd_req_t *req, void *args)
         // /mqttsub?base=dacha/bathroom&endpt=dhtt1;dhth1&act=0
         char _base_id[3];
         char _base_topic[MQTT_SUBSCRIBER_BASE_TOPIC_MAX_LENGTH+1];
-        char _endpoints[MQTT_SUBSCRIBER_END_POINT_MAX_LENGTH+1];
+        char *_endpoints; //[MQTT_SUBSCRIBER_END_POINT_MAX_LENGTH+1];
         char _action[4];
 
         esp_err_t res;
@@ -596,18 +596,23 @@ esp_err_t mqtt_subscriber_post_handler(httpd_req_t *req, void *args)
             uint8_t action = atoi(_action);
             if ( action == 0 ) {
 
-                res = httpd_query_key_value(buf, "endpt", _endpoints, MQTT_SUBSCRIBER_END_POINT_MAX_LENGTH);
+                uint16_t endpoints_available_size =   (MQTT_SUBSCRIBER_MAX_END_POINTS - end_points_count) * MQTT_SUBSCRIBER_END_POINT_MAX_LENGTH;
+                ESP_LOGW(TAG, LOG_FMT("endpoints_available_size = %d"), endpoints_available_size);
+                _endpoints = calloc( endpoints_available_size, sizeof(char));
+                res = httpd_query_key_value(buf, "endpt", _endpoints, endpoints_available_size);
                 error |= res;
 
                 // добавляем
                 res = mqtt_subscriber_add(_base_topic, _endpoints); 
+                free(_endpoints);
                 error |= res;
             } else if ( action == 1 ) {
                 // удаляем
                 res = mqtt_subscriber_del(_base_topic); 
                 error |= res;
             }
-        }       
+        }      
+        
     }
     
     httpd_resp_set_status(req, HTTPD_TYPE_JSON);
