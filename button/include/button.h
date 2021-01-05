@@ -178,7 +178,7 @@ esp_err_t button_rm_cb(button_handle_t btn_handle, button_cb_type_t type);
 //void configure_push_button(int gpio_num, button_active_t level, void (*btn_cb)(void *), void (*btn_press_cb)(void *));
 button_handle_t configure_push_button(int gpio_num, button_active_t level);
 
-esp_err_t button_set_on_presscount_cb(button_handle_t btn_handle, uint32_t pressed_interval, uint8_t cbs_count, button_cb *cb);
+esp_err_t button_set_on_presscount_cb(button_handle_t btn_handle, uint32_t pressed_interval, uint8_t cbs_count, button_cb *cb, void *args);
 
 
 /* TODO:

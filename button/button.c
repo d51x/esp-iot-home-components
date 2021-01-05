@@ -36,10 +36,13 @@ static void button_press_cb(xTimerHandle tmr)
 // поиск в массиве колбеков короткого нажатия по индексу
 static void btn_short_press_by_count(uint8_t id, button_t *btn) 
 {
-    if ( btn->tap_psh2_cb.arg == NULL ) return;
+    if ( btn->tap_psh2_cb.cb == NULL ) return;
     ESP_LOGD(TAG, "%s %d", __func__, id);
-    button_cb *cb = (button_cb *)btn->tap_psh2_cb.arg;
-    if ( cb[id] ) cb[id](NULL);
+    button_cb *cb = (button_cb *)btn->tap_psh2_cb.cb;
+    if ( cb[id] ) {
+        void **args = btn->tap_psh2_cb.arg;
+        cb[id](args[id]);
+    }
 }
 
 // callback таймера для обработки коротких нажатий
@@ -362,14 +365,14 @@ esp_err_t button_add_on_press_cb(button_handle_t btn_handle, uint32_t press_sec,
 
 // регистрация массива колбеков коротких нажатий
 // установить кол-во и функции кол-беков при одинарном, двойном, и т.д. нажатии в указанный интервал
-esp_err_t button_set_on_presscount_cb(button_handle_t btn_handle, uint32_t pressed_interval, uint8_t cbs_count, button_cb *cbs)
+esp_err_t button_set_on_presscount_cb(button_handle_t btn_handle, uint32_t pressed_interval, uint8_t cbs_count, button_cb *cbs, void *args)
 {
     POINT_ASSERT(TAG, btn_handle, ESP_ERR_INVALID_ARG);
     IOT_CHECK(TAG, cbs_count != 0, ESP_ERR_INVALID_ARG);
     IOT_CHECK(TAG, pressed_interval != 0, ESP_ERR_INVALID_ARG);
     button_t *btn = (button_t *) btn_handle;
-    btn->tap_psh2_cb.arg = cbs; 
-    btn->tap_psh2_cb.cb = NULL; 
+    btn->tap_psh2_cb.arg = args; 
+    btn->tap_psh2_cb.cb = cbs; 
     btn->tap_psh2_cb.on_press = cbs_count;
     btn->tap_psh2_cb.interval = pressed_interval / portTICK_PERIOD_MS; 
     btn->tap_psh2_cb.pbtn = btn;
