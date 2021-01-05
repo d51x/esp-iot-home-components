@@ -16,6 +16,9 @@ void relay_mqtt_recv_cb(char *buf, void *args)
     relay_t *p = (relay_t *)args;
     uint8_t value = atoi( buf );
 
+    if ( value > 1 ) {
+        value = !p->state;
+    }
     #ifdef CONFIG_MQTT_TOPIC_SEND_RECV
         if ( p->prev != value )
         {       
