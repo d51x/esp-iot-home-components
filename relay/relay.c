@@ -21,23 +21,43 @@ static const char* TAG = "RELAY";
 
 
 QueueHandle_t relay_status_queue = NULL;
-relay_t *relays = NULL;
+relay_t **relays = NULL;
 
 relay_handle_t relay_create(const char *name, gpio_num_t pin, relay_close_level_t level, bool save_state)
 {   
     for (uint8_t i = 0; i < relay_count; i++)
     {
-        if ( relays[i].pin == pin )
+        relay_t *r = relays[i];
+        if ( r->pin == pin )
             return;
+    }
+    
+    for (uint8_t i = 0; i < relay_count; i++)
+    {
+        ESP_LOGW(TAG, "%s: relays[%d] = %p", __func__, i, relays[i]);
     }
 
     if ( relay_status_queue == NULL )
         relay_status_queue = xQueueCreate(5, sizeof(relay_t));
 
+
+    relay_t **tmp_relays = calloc(relay_count,  sizeof(relay_t*));
+    memcpy(tmp_relays, relays, relay_count * sizeof(relay_t*));
+    ESP_LOGW(TAG, "%s: increase relay_count", __func__);
     relay_count++;
-        relays = (relay_t * ) realloc( relays, relay_count * sizeof(relay_t));
+    
+    
+    relays = realloc( relays, relay_count * sizeof(relay_t *));
+    ESP_LOGW(TAG, "%s: relays = %p", __func__, relays);
+    
+    memcpy(relays, tmp_relays, (relay_count-1) * sizeof(relay_t*));
+    free(tmp_relays);
 
     relay_t* relay_p = (relay_t*) calloc(1, sizeof(relay_t));
+
+    ESP_LOGW(TAG, "%s: relay_p = %p", __func__, relay_p);
+    ESP_LOGW(TAG, "%s: relays[relay_count-1] = %p", __func__, relays[relay_count-1]);
+
     relay_p->pin = pin;
     relay_p->name = name;
     relay_p->close_level = level;
@@ -52,9 +72,17 @@ relay_handle_t relay_create(const char *name, gpio_num_t pin, relay_close_level_
     io_conf.pull_up_en = 0;
     IOT_CHECK(TAG, gpio_config(&io_conf) == ESP_OK, NULL);
 
-    memcpy(&relays[ relay_count - 1], relay_p, sizeof(relay_t));
+    //memcpy(&relays[ relay_count - 1], relay_p, sizeof(relay_t));
+    relays[ relay_count - 1] = relay_p;
 
     ESP_LOGI(TAG, "%s: created relay %s for pin %d", __func__, name, pin);
+
+    for (uint8_t i = 0; i < relay_count; i++)
+    {
+        ESP_LOGW(TAG, "%s: relays[%d] = %p", __func__, i, relays[i]);
+    }
+
+    ESP_LOGW(TAG, "%s: relays[relay_count-1] = %p", __func__, relays[relay_count-1]);
     return (relay_handle_t) relay_p;
 }
 
@@ -89,14 +117,14 @@ esp_err_t relay_delete(relay_handle_t relay_handle)
     uint8_t k = 0;
     for (uint8_t i = 0; i <relay_count; i++)
     {
-        if (  relays[i].pin != relay->pin )
+        if (  ((relay_t *)relays[i])->pin != relay->pin )
         {
-            memcpy(&r[k], &relays[i], sizeof(relay_t));
+            memcpy(&r[k], (relay_t *)relays[i], sizeof(relay_t));
             k++;
         }
     }
     relay_count--;
-    relays = (relay_t *)realloc(relays, relay_count * sizeof(relay_t));
+    relays = (relay_t *)realloc(relays, relay_count * sizeof(relay_t *));
     memcpy(relays, r, relay_count * sizeof(relay_t));
     free(r);
     
@@ -137,7 +165,7 @@ void relay_load_nvs()
         // relay_hrelay_read( (relay_handle_t)&relays[i]);
         relay_create( _relays[i].name, _relays[i].pin, _relays[i].close_level, _relays[i].save_state);
         if ( _relays[i].save_state ) {
-            relay_write((relay_handle_t)&relays[i],  _relays[i].state);
+            relay_write((relay_handle_t)relays[i],  _relays[i].state);
         }
     }
 

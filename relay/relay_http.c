@@ -16,19 +16,20 @@ const char *html_page_title_relays_cfg ICACHE_RODATA_ATTR = "Relays Config";
 void relay_print_button(httpd_req_t *req, const char *btn_id, uint8_t idx)
 {
         char *b_uri = malloc( strlen(button_uri) + 5);
-        sprintf(b_uri, button_uri, relays[idx].pin );
+        relay_t *relay = relays[idx];
+        sprintf(b_uri, button_uri, relay->pin );
     
         httpd_resp_sendstr_chunk_fmt(req, html_button
                                         , btn_id
                                         , "lht"
-                                        , relays[idx].state ? "on" : "off"
+                                        , relay->state ? "on" : "off"
                                         , "lht"
                                         , b_uri
-                                        , !relays[idx].state
-                                        , relays[idx].name
+                                        , !relay->state
+                                        , relay->name
                                         , 0
                                         , 1
-                                        , relays[idx].name
+                                        , relay->name
         );
         free(b_uri);                           
 }
@@ -45,7 +46,8 @@ static void relay_print_data_main(http_args_t *args)
     for (uint8_t i = 0; i < relay_count; i++)
     {
         char *b_id = malloc( strlen(button_id) + 5);
-        sprintf(b_id, button_id, relays[i].pin );
+        relay_t *relay = relays[i];
+        sprintf(b_id, button_id, relay->pin );
         relay_print_button(req, b_id, i);
         free(b_id);
     }
@@ -99,12 +101,13 @@ static esp_err_t relay_get_handler(httpd_req_t *req)
                 uint8_t st = atoi(param);
                 for (uint8_t i = 0; i < relay_count; i++)
                 {
-                    if ( relays[i].pin == pin )
+                    relay_t *relay = relays[i];
+                    if ( relay->pin == pin )
                     {
                         if ( st > 1) {
-                            st = !relays[i].state;
+                            st = !relay->state;
                         }
-                        err =  relay_write( (relay_handle_t)&relays[i], st);
+                        err =  relay_write( relay, st);
                         itoa(st, param, 10);
                         httpd_resp_sendstr_chunk(req, param);
                         break;
@@ -116,9 +119,10 @@ static esp_err_t relay_get_handler(httpd_req_t *req)
             {
                 for (uint8_t i = 0; i < relay_count; i++)
                 {
-                    if ( relays[i].pin == pin )
+                    relay_t *relay =     relays[i];
+                    if ( relay->pin == pin )
                     {
-                        relay_state_t st =  relay_read( (relay_handle_t)&relays[i]);
+                        relay_state_t st =  relay_read( relay );
                         itoa(st, param, 10);
                         httpd_resp_sendstr_chunk(req, param);
                         break;
@@ -131,9 +135,10 @@ static esp_err_t relay_get_handler(httpd_req_t *req)
             httpd_resp_sendstr_chunk(req, "{");
             for (uint8_t i = 0; i < relay_count; i++)
             {
-                relay_state_t st =  relay_read( (relay_handle_t)&relays[i]);
+                relay_t *relay = relays[i];
+                relay_state_t st =  relay_read( relay );
                 char *buf = malloc(20);
-                sprintf(buf, "\"relay%d\": %d",  relays[i].pin, st );
+                sprintf(buf, "\"relay%d\": %d",  relay->pin, st );
                 httpd_resp_sendstr_chunk(req, buf);
                 if ( i < relay_count-1 )
                     httpd_resp_sendstr_chunk(req, ", ");

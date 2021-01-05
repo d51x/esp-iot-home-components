@@ -39,7 +39,7 @@ struct relay {
 
 
 
-extern relay_t *relays;
+extern relay_t **relays;
 uint8_t relay_count;
 extern QueueHandle_t relay_status_queue;
 
