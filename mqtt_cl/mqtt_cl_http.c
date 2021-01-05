@@ -102,6 +102,7 @@ static void mqtt_print_options(http_args_t *args)
     httpd_resp_sendstr_chunk(req, html_block_data_end);
 }
 
+#ifdef CONFIG_PAGE_DEBUG
 static void mqtt_print_debug(http_args_t *args)
 {
     http_args_t *arg = (http_args_t *)args;
@@ -114,12 +115,15 @@ static void mqtt_print_debug(http_args_t *args)
     , mqtt_reconnects-1, mqtt_error_count
     ); 
 }
+#endif
 
 void mqtt_register_http_print_data() 
 {
     http_args_t *p = calloc(1,sizeof(http_args_t));
     register_print_page_block( "mqtt_options", PAGES_URI[ PAGE_URI_SETUP ], 2, mqtt_print_options, p, mqtt_http_process_params, NULL );
+    #ifdef CONFIG_PAGE_DEBUG
     register_print_page_block( "mqtt_debug", PAGES_URI[ PAGE_URI_DEBUG ], 2, mqtt_print_debug, p, NULL, NULL );
+    #endif
 }
 
 void mqtt_http_process_params(httpd_req_t *req, void *args)

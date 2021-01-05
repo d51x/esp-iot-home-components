@@ -69,6 +69,7 @@ static void pzem_print_options(http_args_t *args)
     httpd_resp_sendstr_chunk(req, html_block_data_end);   
 }
 
+#ifdef CONFIG_PAGE_DEBUG
 static void pzem_print_debug(http_args_t *args)
 {
     http_args_t *arg = (http_args_t *)args;
@@ -77,6 +78,7 @@ static void pzem_print_debug(http_args_t *args)
     httpd_resp_sendstr_chunk_fmt(req, "PZEM %s: %d", html_block_pzem004t_title_errors, pzem_data.errors);
     //http_print_value(req, html_block_data_form_item_label_label, html_block_pzem004t_title_errors, "%d", UINT16_T, (void *)&pzem_data.errors);
 }
+#endif
 
 static void pzem_print_data(http_args_t *args)
 {
@@ -156,8 +158,12 @@ void pzem_register_http_print_data()
 {
     http_args_t *p = calloc(1,sizeof(http_args_t));
     register_print_page_block( "pzem_data", PAGES_URI[ PAGE_URI_ROOT], 3, pzem_print_data, p, NULL, NULL);    
+    #ifdef CONFIG_PAGE_TOOLS
     register_print_page_block( "pzem_tools", PAGES_URI[ PAGE_URI_TOOLS], 3, pzem_print_options, p, pzem_http_process_params, NULL);    
+    #endif
+    #ifdef CONFIG_PAGE_DEBUG
     register_print_page_block( "pzem_debug", PAGES_URI[ PAGE_URI_DEBUG], 3, pzem_print_debug, p, NULL, NULL);    
+    #endif
 }
 
 static esp_err_t pzem_get_handler(httpd_req_t *req)

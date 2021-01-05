@@ -76,18 +76,22 @@ static void wifi_print_options(http_args_t *args)
 
 }
 
+#ifdef CONFIG_PAGE_DEBUG
 static void wifi_print_debug(http_args_t *args)
 {
     http_args_t *arg = (http_args_t *)args;
     httpd_req_t *req = (httpd_req_t *)arg->req;
     httpd_resp_sendstr_chunk_fmt(req, "<br>Wifi reconnects: %d<br>", wifi_get_reconnect_count());
 }
+#endif
 
 void wifi_register_http_print_data() 
 {
 	http_args_t *p = calloc(1,sizeof(http_args_t));
 	register_print_page_block( "wifi_options", PAGES_URI[ PAGE_URI_SETUP ], 1, wifi_print_options, p, (httpd_uri_func) wifi_http_process_params, NULL );
+	#ifdef CONFIG_PAGE_DEBUG
 	register_print_page_block( "wifi_dbg", PAGES_URI[ PAGE_URI_DEBUG ], 1, wifi_print_debug, p, NULL, NULL );
+	#endif
 }
 
 

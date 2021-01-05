@@ -17,9 +17,17 @@ static const char *TAG = "HTTPH";
 const char *PAGES_URI[PAGE_URI_MAX] = { 
     HTTP_URI_ROOT,                    // PAGE_URI_ROOT
     HTTP_URI_SETUP,               // PAGE_URI_SETUP
+    
+    #ifdef CONFIG_PAGE_DEBUG
     HTTP_URI_DEBUG,               // PAGE_URI_DEBUG
+    #endif
+
     HTTP_URI_CONFIG,               // PAGE_URI_DEBUG
+    
+    #ifdef CONFIG_PAGE_TOOLS
     HTTP_URI_TOOLS,               // PAGE_URI_TOOLS
+    #endif
+
     HTTP_URI_OTA,              // PAGE_URI_OTA
     HTTP_URI_REBOOT,              // PAGE_URI_REBOOT
     "/main.css",            // PAGE_URI_CSS
@@ -34,9 +42,17 @@ const char *PAGES_URI[PAGE_URI_MAX] = {
 user_ctx_t PAGES_HANDLER[PAGE_URI_MAX] = {
      {HTTP_STR_MAIN,    true,   show_page_main,       NULL}
     ,{HTTP_STR_SETUP,   true,   show_page_setup,      NULL}
+
+    #ifdef CONFIG_PAGE_DEBUG
     ,{HTTP_STR_DEBUG,   true,   show_page_debug,      NULL}
+    #endif
+
     ,{HTTP_STR_CONFIG,   true,   show_page_config,      NULL}
+
+    #ifdef CONFIG_PAGE_TOOLS
     ,{HTTP_STR_TOOLS,   true,   show_page_tools,      NULL}
+    #endif
+
     ,{HTTP_STR_OTA,     true,   show_page_ota,     NULL}
     ,{HTTP_STR_REBOOT,  false,  reboot_get_handler,   NULL}
 };
@@ -117,7 +133,9 @@ esp_err_t config_get_handler(httpd_req_t *req){
   return ESP_OK;
 }
 
-esp_err_t tools_get_handler(httpd_req_t *req){
+#ifdef CONFIG_PAGE_TOOLS
+esp_err_t tools_get_handler(httpd_req_t *req)
+{
 
   // check params
 	if ( http_get_has_params(req) == ESP_OK) 
@@ -137,6 +155,7 @@ esp_err_t tools_get_handler(httpd_req_t *req){
   httpd_resp_end(req);
   return ESP_OK;
 }
+#endif
 
 esp_err_t update_get_handler(httpd_req_t *req){
 
@@ -154,6 +173,7 @@ esp_err_t update_get_handler(httpd_req_t *req){
   return ESP_OK;
 }
 
+#ifdef CONFIG_PAGE_DEBUG
 esp_err_t debug_get_handler(httpd_req_t *req){
   httpd_resp_set_type(req, HTTPD_TYPE_TEXT);
   show_http_page( req );
@@ -162,6 +182,7 @@ esp_err_t debug_get_handler(httpd_req_t *req){
   httpd_resp_end(req);
   return ESP_OK;
 }
+#endif
 
 esp_err_t reboot_get_handler(httpd_req_t *req)
 {

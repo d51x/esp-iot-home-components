@@ -144,6 +144,14 @@ menu "Project config"
             help
                 Webserver tasks stack size
 
+        config PAGE_TOOLS
+            bool "Show menu Tools and page /tools"
+            default y
+            
+        config PAGE_DEBUG
+            bool "Show menu Debug and page /debug"
+            default y
+
     endmenu
         
     menu "Relay component"
@@ -200,6 +208,7 @@ menu "Project config"
         config COMPONENT_I2C
             bool "Enable I2C driver"
             default y
+            select PAGE_TOOLS
             help
                 Enable I2C driver
 
@@ -221,6 +230,7 @@ menu "Project config"
             bool "Enable I2C scanner"
             default y
             depends on COMPONENT_I2C
+            select PAGE_TOOLS
             help
                 Enable I2C scanner
 
@@ -235,6 +245,7 @@ menu "Project config"
             bool "LCD2004"
             default n
             depends on COMPONENT_I2C
+            select PAGE_TOOLS
             help
                 Enable LCD2004
 

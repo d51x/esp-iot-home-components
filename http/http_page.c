@@ -45,27 +45,38 @@ void httpd_resp_end(httpd_req_t *req)
     httpd_resp_send_chunk(req, NULL, 0);
 }
 
+static void fill_menu(uint8_t id, const char *uri, const char *name)
+{
+    strcpy(http_menu[id].uri,    uri   );
+    strcpy(http_menu[id].name,   name   );   
+}
+
 void page_initialize_menu()
 {
     http_menu = (http_menu_item_t *)calloc(MENU_ITEM_COUNT, sizeof(http_menu_item_t));
     
-    strcpy(http_menu[0].uri,    HTTP_URI_ROOT   );
-    strcpy(http_menu[0].name,   HTTP_STR_MAIN   );    
-    
-    strcpy(http_menu[1].uri,    HTTP_URI_SETUP  );
-    strcpy(http_menu[1].name,   HTTP_STR_SETUP  );
+    uint8_t id = 0;
+    fill_menu(id, HTTP_URI_ROOT, HTTP_STR_MAIN );
+    id++;
 
-    strcpy(http_menu[2].uri,    HTTP_URI_CONFIG  );
-    strcpy(http_menu[2].name,   HTTP_STR_CONFIG  );  
+    fill_menu(id, HTTP_URI_SETUP, HTTP_STR_SETUP );
+    id++;
 
-    strcpy(http_menu[3].uri,    HTTP_URI_TOOLS  );
-    strcpy(http_menu[3].name,   HTTP_STR_TOOLS  );   
+    fill_menu(id, HTTP_URI_CONFIG, HTTP_STR_CONFIG );
+    id++;
 
-    strcpy(http_menu[4].uri,    HTTP_URI_OTA );
-    strcpy(http_menu[4].name,   HTTP_STR_OTA );
+    #ifdef CONFIG_PAGE_TOOLS
+        fill_menu(id, HTTP_URI_TOOLS, HTTP_STR_TOOLS );
+        id++;
+    #endif
 
-    strcpy(http_menu[5].uri,    HTTP_URI_DEBUG  );
-    strcpy(http_menu[5].name,   HTTP_STR_DEBUG  );
+    fill_menu(id, HTTP_URI_OTA, HTTP_STR_OTA );
+    id++;
+
+    #ifdef CONFIG_PAGE_DEBUG
+        fill_menu(id, HTTP_URI_DEBUG, HTTP_STR_DEBUG );
+        id++;
+    #endif
 /*
 {
     { HTTP_URI_ROOT,   HTTP_STR_MAIN   },
@@ -133,15 +144,19 @@ void page_generate_data(httpd_req_t *req, const char *uri)
 {
     httpd_resp_sendstr_chunk(req, html_page_content_start);
     
+    #ifdef CONFIG_PAGE_DEBUG
     if ( strcmp(uri, PAGES_URI[PAGE_URI_DEBUG]) == 0) {
         httpd_resp_sendstr_chunk(req, html_block_data_no_header_start);
     }
+    #endif
 
     print_page_block( req, uri);
 
+    #ifdef CONFIG_PAGE_DEBUG
     if ( strcmp(uri, PAGES_URI[PAGE_URI_DEBUG]) == 0) {
         httpd_resp_sendstr_chunk(req, html_block_data_end);
     }
+    #endif
 
     httpd_resp_sendstr_chunk(req, html_page_content_end);
 }
@@ -260,7 +275,13 @@ void print_page_block(httpd_req_t *req, const char *uri)
     }
 
 
-    if ( strcmp(uri, PAGES_URI[ PAGE_URI_TOOLS ]) == 0 || strcmp(uri, PAGES_URI[ PAGE_URI_CONFIG ]) == 0 || strcmp(uri, PAGES_URI[ PAGE_URI_SETUP ]) == 0)
+    if ( 
+         #ifdef CONFIG_PAGE_TOOLS
+         strcmp(uri, PAGES_URI[ PAGE_URI_TOOLS ]) == 0 || 
+         #endif
+
+         strcmp(uri, PAGES_URI[ PAGE_URI_CONFIG ]) == 0 || 
+         strcmp(uri, PAGES_URI[ PAGE_URI_SETUP ]) == 0)
     {
         httpd_resp_sendstr_chunk(req, html_page_reboot_button_block);
     }
@@ -290,20 +311,24 @@ void show_page_config(httpd_req_t *req, const char *title)
     generate_page(req, PAGES_URI[ PAGE_URI_CONFIG ], title);
 }
 
+#ifdef CONFIG_PAGE_TOOLS
 void show_page_tools(httpd_req_t *req, const char *title)
 {
     generate_page(req, PAGES_URI[ PAGE_URI_TOOLS ], title );
 }
+#endif
 
 void show_page_ota(httpd_req_t *req, const char *title)
 {
     generate_page(req, PAGES_URI[ PAGE_URI_OTA ], title);
 }
 
+#ifdef CONFIG_PAGE_DEBUG
 void show_page_debug(httpd_req_t *req, const char *title)
 {
     generate_page(req, PAGES_URI[ PAGE_URI_DEBUG ], title);
 }
+#endif
 
 void show_restart_page_data(httpd_req_t *req)
 {

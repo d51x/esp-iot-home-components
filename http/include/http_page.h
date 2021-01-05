@@ -57,10 +57,16 @@ void show_custom_page(httpd_req_t *req, const char *uri, const char *title);
 void show_page_main(httpd_req_t *req, const char *title);
 void show_page_setup(httpd_req_t *req,  const char *title);
 void show_page_config(httpd_req_t *req, const char *title);
-void show_page_tools(httpd_req_t *req, const char *title);
-void show_page_ota(httpd_req_t *req, const char *title);
-void show_page_debug(httpd_req_t *req, const char *title);
 
+#ifdef CONFIG_PAGE_TOOLS
+void show_page_tools(httpd_req_t *req, const char *title);
+#endif
+
+void show_page_ota(httpd_req_t *req, const char *title);
+
+#ifdef CONFIG_PAGE_DEBUG
+void show_page_debug(httpd_req_t *req, const char *title);
+#endif
 
 void page_generate_html_start(httpd_req_t *req, const char *title);
 void page_generate_html_end(httpd_req_t *req);

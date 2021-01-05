@@ -14,9 +14,17 @@ void register_uri_handlers(httpd_handle_t _server) {
     
     add_uri_get_handler( _server, PAGES_URI[PAGE_URI_ROOT], main_get_handler, &PAGES_HANDLER[PAGE_URI_ROOT]); 
     add_uri_get_handler( _server, PAGES_URI[PAGE_URI_SETUP], setup_get_handler, &PAGES_HANDLER[PAGE_URI_SETUP]); 
+    
+    #ifdef CONFIG_PAGE_DEBUG
     add_uri_get_handler( _server, PAGES_URI[PAGE_URI_DEBUG], debug_get_handler, &PAGES_HANDLER[PAGE_URI_DEBUG]); 
+    #endif
+
     add_uri_get_handler( _server, PAGES_URI[PAGE_URI_CONFIG], config_get_handler, &PAGES_HANDLER[PAGE_URI_CONFIG]); 
+    
+    #ifdef CONFIG_PAGE_TOOLS
     add_uri_get_handler( _server, PAGES_URI[PAGE_URI_TOOLS], tools_get_handler, &PAGES_HANDLER[PAGE_URI_TOOLS]); 
+    #endif
+    
     add_uri_get_handler( _server, PAGES_URI[PAGE_URI_OTA], update_get_handler, &PAGES_HANDLER[PAGE_URI_OTA]); 
 
     add_uri_get_handler( _server, PAGES_URI[PAGE_URI_REBOOT], reboot_get_handler, NULL); 

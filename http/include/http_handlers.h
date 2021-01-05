@@ -28,18 +28,33 @@ pages:
 #define HTTP_STR_MAIN "Main"
 #define HTTP_STR_SETUP "Setup"
 #define HTTP_STR_CONFIG "Config"
+
+#ifdef CONFIG_PAGE_DEBUG
 #define HTTP_STR_DEBUG "Debug"
+#endif
+
+#ifdef CONFIG_PAGE_TOOLS
 #define HTTP_STR_TOOLS "Tools"
+#endif
+
 #define HTTP_STR_OTA "Update"
 #define HTTP_STR_REBOOT "Reboot"
 
 #define HTTP_URI_ROOT "/"
 #define HTTP_URI_SETUP "/setup"
+
+#ifdef CONFIG_PAGE_TOOLS
 #define HTTP_URI_TOOLS "/tools"
+#endif
+
 #define HTTP_URI_CONFIG "/config"
 #define HTTP_URI_OTA "/update"
 #define HTTP_URI_OTAPOST "/update"
+
+#ifdef CONFIG_PAGE_DEBUG
 #define HTTP_URI_DEBUG "/debug"
+#endif
+
 #define HTTP_URI_REBOOT "/reboot"
 #define HTTP_URI_ICON_MENU "/menu.png"
 #define HTTP_URI_ICON_MENU2 "/menu2.png"
@@ -65,9 +80,17 @@ typedef struct user_ctx {
 enum {
     PAGE_URI_ROOT = 0,
     PAGE_URI_SETUP,
+
+    #ifdef CONFIG_PAGE_DEBUG
     PAGE_URI_DEBUG,
+    #endif
+
     PAGE_URI_CONFIG,
+
+    #ifdef CONFIG_PAGE_TOOLS
     PAGE_URI_TOOLS,
+    #endif
+
     PAGE_URI_OTA,
     PAGE_URI_REBOOT,
     PAGE_URI_CSS,
@@ -81,7 +104,15 @@ enum {
 extern const char *PAGES_URI[PAGE_URI_MAX];
 extern user_ctx_t PAGES_HANDLER[PAGE_URI_MAX];
 
-#define MENU_ITEM_COUNT 6
+#if defined(CONFIG_PAGE_TOOLS) && defined(CONFIG_PAGE_DEBUG)
+    #define MENU_ITEM_COUNT 6
+#else
+  #if defined(CONFIG_PAGE_TOOLS) || defined(CONFIG_PAGE_DEBUG)
+        #define MENU_ITEM_COUNT 5
+    #else
+        #define MENU_ITEM_COUNT 4
+  #endif
+#endif
 #define MENU_ITEM_LENGTH 10
 
 extern uint8_t menu_items_count;
@@ -116,8 +147,15 @@ extern http_menu_item_t *http_menu;
 esp_err_t main_get_handler(httpd_req_t *req);
 esp_err_t setup_get_handler(httpd_req_t *req);
 esp_err_t config_get_handler(httpd_req_t *req);
+
+#ifdef CONFIG_PAGE_TOOLS
 esp_err_t tools_get_handler(httpd_req_t *req);
+#endif
+
+#ifdef CONFIG_PAGE_DEBUG
 esp_err_t debug_get_handler(httpd_req_t *req);
+#endif
+
 esp_err_t update_get_handler(httpd_req_t *req);
 esp_err_t update_post_handler(httpd_req_t *req);
 esp_err_t reboot_get_handler(httpd_req_t *req);

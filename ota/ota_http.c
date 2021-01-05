@@ -180,7 +180,9 @@ void ota_register_http_print_data()
 {
     http_args_t *p = calloc(1,sizeof(http_args_t));
     register_print_page_block( "ota", PAGES_URI[ PAGE_URI_OTA ], 1, ota_print_html, p, ota_http_get_process_params, NULL );
+    // #ifdef CONFIG_PAGE_DEBUG
     //register_print_page_block( "debug", PAGES_URI[ PAGE_URI_DEBUG], 2, ota_debug_print, p, NULL, NULL  ); 
+    //#endif
 
 }
 

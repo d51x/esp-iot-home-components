@@ -206,7 +206,9 @@ void ledcontrol_register_http_print_data(ledcontrol_handle_t dev_h)
     // регистрация блока настроек в /tools
     http_args_t *p = calloc(1,sizeof(http_args_t));
     p->dev = dev_h;
+    #ifdef CONFIG_PAGE_TOOLS
     register_print_page_block( "ledc_opt", PAGES_URI[ PAGE_URI_TOOLS], 3, ledc_print_options, p, ledc_http_process_params, p );
+    #endif
 }
 
 esp_err_t ledcontrol_get_handler(httpd_req_t *req)

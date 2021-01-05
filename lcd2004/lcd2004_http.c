@@ -140,7 +140,9 @@ void lcd2004_http_process_params(httpd_req_t *req, void *args)
 void lcd2004_register_http_print_data() 
 {
     http_args_t *p = calloc(1,sizeof(http_args_t));
+    #ifdef CONFIG_PAGE_TOOLS
     register_print_page_block( "lcd2004_options", PAGES_URI[ PAGE_URI_TOOLS], 3, lcd2004_print_options, p, lcd2004_http_process_params, NULL );
+    #endif
 }
 
 esp_err_t lcd2004_get_handler(httpd_req_t *req)

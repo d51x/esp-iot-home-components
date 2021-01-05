@@ -150,8 +150,13 @@ static void irrcv_register_http_print_data(irrcv_handle_t irrcv)
     http_args_t *p = calloc(1,sizeof(http_args_t));
     p->dev = irrcv;
     //register_print_page_block( block_1, IRRCV_URI, 3, irrcv_print_data, p, NULL, NULL );
+    #ifdef CONFIG_PAGE_TOOLS
     register_print_page_block( block_2, PAGES_URI[ PAGE_URI_TOOLS ], 4, irrcv_print_cfg, p, irrcv_process_param, irrcv );
+    #endif
+
+    #ifdef CONFIG_PAGE_DEBUG
     register_print_page_block( block_3, PAGES_URI[ PAGE_URI_DEBUG ], 4, irrcv_print_code, p, NULL, NULL );
+    #endif
 }
 
 static esp_err_t irrcv_get_handler(httpd_req_t *req)
