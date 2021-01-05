@@ -14,7 +14,6 @@
 
 #ifdef CONFIG_COMPONENT_RELAY
 
-typedef struct relay relay_t;
 typedef void* relay_handle_t;
 
 typedef enum {
@@ -28,14 +27,14 @@ typedef enum {
 } relay_state_t;
 
 
-struct relay {
+typedef struct  {
 	  gpio_num_t pin;
     relay_state_t state;
     relay_close_level_t close_level;
     relay_state_t prev;
     bool save_state;
     char *name;
-};   
+} relay_t;   
 
 
 
