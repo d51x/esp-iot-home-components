@@ -102,6 +102,19 @@ esp_err_t http_get_key_uint8(httpd_req_t *req, const char *param_name, uint8_t *
     return (error == 0) ? ESP_OK : ESP_FAIL;
 }
 
+esp_err_t http_get_key_uint8_def(httpd_req_t *req, const char *param_name, uint8_t *value, uint8_t def)
+{
+    esp_err_t err = http_get_key_uint8(req, param_name, value);
+    if ( err != ESP_OK ) 
+    {
+        *value = def;
+        ESP_LOGE(TAG, "error get param \"%s\", set to default %d", param_name, def);
+    } else {
+        ESP_LOGI(TAG, "get param \"%s\" = %d", param_name, *value);
+    }
+    return err;
+}
+
 char *http_uri_clean(httpd_req_t *req)
 {
     char *p;
