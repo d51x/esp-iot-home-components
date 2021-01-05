@@ -12,7 +12,7 @@
 #include "esp_http_server.h"
 #include "utils.h"
 
-
+#define OTA_SIZE_1MB 458752
 typedef struct {
     char fname[32];
     uint32_t size;

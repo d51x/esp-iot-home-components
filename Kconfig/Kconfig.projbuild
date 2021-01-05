@@ -152,6 +152,10 @@ menu "Project config"
             bool "Show menu Debug and page /debug"
             default y
 
+        config PAGE_OTA_DETAILS
+            bool "Show additional ota details"
+            default y            
+
     endmenu
         
     menu "Relay component"

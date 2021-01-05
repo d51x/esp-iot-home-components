@@ -54,6 +54,7 @@ static void ota_print_html(http_args_t *args)
 
     httpd_resp_sendstr_chunk_fmt(req, html_block_data_header_start, ota_block_title);
 
+#ifdef CONFIG_PAGE_OTA_DETAILS
     //html_page_ota_info
     const esp_app_desc_t *app_desc = esp_ota_get_app_description();
     const esp_partition_t* esp_part = esp_ota_get_running_partition();
@@ -63,6 +64,7 @@ static void ota_print_html(http_args_t *args)
     if ( err != ESP_OK ) {
         memset(fw, 0, sizeof(ota_firm_t));
     }
+
 
     httpd_resp_sendstr_chunk_fmt(req
     , html_page_ota_info
@@ -77,13 +79,19 @@ static void ota_print_html(http_args_t *args)
     , esp_part->size        
     , app_desc->idf_ver
     );
-    
-    free(fw);
 
+    free(fw);
+    free((void *)app_desc); // TODO
+#endif
+
+#ifdef CONFIG_PAGE_OTA_DETAILS
     httpd_resp_sendstr_chunk_fmt(req, html_page_ota, esp_part->size);
+#else
+    httpd_resp_sendstr_chunk_fmt(req, html_page_ota, OTA_SIZE_1MB);
+#endif
     httpd_resp_sendstr_chunk(req, html_page_ota_selected);
 
-    free((void *)app_desc); // TODO
+    
 
     httpd_resp_sendstr_chunk(req, html_block_data_end);  
     httpd_resp_sendstr_chunk(req, html_block_data_end);  
