@@ -51,7 +51,7 @@ void lcd2004_print_options(http_args_t *args)
                                 );
     
     httpd_resp_sendstr_chunk(req, html_block_data_form_end);
-    httpd_resp_sendstr_chunk(req, html_block_data_end);  
+    //httpd_resp_sendstr_chunk(req, html_block_data_end);  
     httpd_resp_sendstr_chunk(req, "<div class='rht'>");
     // ==========================================================================    
     char rht[] = "rht";

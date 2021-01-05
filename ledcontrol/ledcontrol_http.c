@@ -14,14 +14,15 @@ const char *html_page_config_ledc_channel_title_name ICACHE_RODATA_ATTR = "t_ch%
 const char *html_page_config_ledc_count_name ICACHE_RODATA_ATTR = "cnt";
 
 const char *html_block_led_control_item ICACHE_RODATA_ATTR = 
-    "<p>"
+    //"<p>"
         "<span class='lf'><b>%s</b></span>"                 // s - title,
         //"<span><input type=\"range\" max=\"255\" name=\"ledc%d\" value=\"%d\"></span>"          // slider, d - channel id, d - duty
         "<span class='rh'>"
             "<input type=\"range\" max=\"255\" name=\""LED_CONTROL_TAG"%d\" value=\"%d\" data-uri=\""LED_CONTROL_TAG"?ch=%d&duty=\" onchange=\"slider(this.value, this.name, this.dataset.uri);\" />"
             "<i id=\""LED_CONTROL_TAG"%d\" >%d</i>"
         "</span>"              // d - channel id, d - duty
-    "</p>"; 
+    //"</p>"
+    ; 
 
 static const char* TAG = "LEDCHTTP";
 
@@ -68,7 +69,7 @@ static void ledc_print_options(http_args_t *args)
     httpd_resp_sendstr_chunk_fmt(req, html_block_data_form_submit, LED_CONTROL_TAG);
     httpd_resp_sendstr_chunk(req, html_block_data_form_end);
     // ==========================================================================    
-    httpd_resp_sendstr_chunk(req, html_block_data_end);    
+    //httpd_resp_sendstr_chunk(req, html_block_data_end);    
     httpd_resp_sendstr_chunk(req, html_block_data_end);    
 }
 

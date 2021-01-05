@@ -14,20 +14,22 @@ const char *html_page_config_wifi_hostname ICACHE_RODATA_ATTR = "Hostname";
 const char *html_page_config_wifi_ssid ICACHE_RODATA_ATTR = "SSID";
 const char *html_page_config_wifi_pass ICACHE_RODATA_ATTR = "Password";
 
-const char *html_page_config_wifi_mode ICACHE_RODATA_ATTR = 
+// const char *html_page_config_wifi_mode ICACHE_RODATA_ATTR = 
 
-			"<p><label class='lf'>Mode:</label>"
-				"<label><input type='radio' name='"URI_PARAM_WIFI_MODE"' value='1' %s /> STA</label>" 
-				"<label><input type='radio' name='"URI_PARAM_WIFI_MODE"' value='2' %s /> AP</label>"
-			"</p>"
-;
+// 			//"<p>"
+// 				"<label class='lf'>Mode:</label>"
+// 				"<label><input type='radio' name='"URI_PARAM_WIFI_MODE"' value='1' %s /> STA</label>" 
+// 				"<label><input type='radio' name='"URI_PARAM_WIFI_MODE"' value='2' %s /> AP</label>"
+// 			//"</p>"
+// ;
 
-const char *html_page_config_wifi_ip_addr ICACHE_RODATA_ATTR = 
+// const char *html_page_config_wifi_ip_addr ICACHE_RODATA_ATTR = 
 
-			"<p><label class='lf'>IP address:</label>"
-				"<input size='20' name='"URI_PARAM_WIFI_IP_ADDR"' class='edit rh' value='%s' %s />"
-			"</p>"
-;
+// 			//"<p>"
+// 				"<label class='lf'>IP address:</label>"
+// 				"<input size='20' name='"URI_PARAM_WIFI_IP_ADDR"' class='edit rh' value='%s' %s />"
+// 			//"</p>"
+// ;
 
 static void wifi_print_options(http_args_t *args)
 {
@@ -58,20 +60,38 @@ static void wifi_print_options(http_args_t *args)
                                 );
 
 	// ==========================================================================
-	httpd_resp_sendstr_chunk_fmt(req, html_page_config_wifi_mode
-											, (wifi_cfg->mode == WIFI_MODE_STA) ? "checked" : ""          // sta checked
-										, (wifi_cfg->mode == WIFI_MODE_AP)  ? "checked" : ""         // ap checked
-                                );
+	httpd_resp_sendstr_chunk_fmt(req, html_block_data_form_item_label
+									, "Mode"
+	);
+
+	httpd_resp_sendstr_chunk_fmt(req, html_block_data_form_item_radio
+									, URI_PARAM_WIFI_MODE
+									, "1"
+									, (wifi_cfg->mode == WIFI_MODE_STA) ? html_checkbox_checked : ""
+									, "STA"
+	);
+
+	httpd_resp_sendstr_chunk_fmt(req, html_block_data_form_item_radio
+									, URI_PARAM_WIFI_MODE
+									, "2"
+									, (wifi_cfg->mode == WIFI_MODE_AP) ? html_checkbox_checked : ""
+									, "AP"
+	);
+
+	// httpd_resp_sendstr_chunk_fmt(req, html_page_config_wifi_mode
+	// 										, (wifi_cfg->mode == WIFI_MODE_STA) ? "checked" : ""          // sta checked
+	// 									, (wifi_cfg->mode == WIFI_MODE_AP)  ? "checked" : ""         // ap checked
+    //                             );
 
 	// ==========================================================================
-	httpd_resp_sendstr_chunk_fmt(req, html_page_config_wifi_ip_addr, wifi_cfg->ip, "disabled");
+	httpd_resp_sendstr_chunk_fmt(req, html_block_data_form_item_label_edit, "IP address", URI_PARAM_WIFI_IP_ADDR, wifi_cfg->ip); //, "disabled");
 
 	// ==========================================================================
 	httpd_resp_sendstr_chunk_fmt(req, html_block_data_form_submit, "1");
 
 	// ==========================================================================
     httpd_resp_sendstr_chunk(req, html_block_data_form_end);
-    httpd_resp_sendstr_chunk(req, html_block_data_end);
+    //httpd_resp_sendstr_chunk(req, html_block_data_end);
     httpd_resp_sendstr_chunk(req, html_block_data_end);
 
 }

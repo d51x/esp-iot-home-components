@@ -34,14 +34,20 @@ const char *html_page_end1  =
       "<script type='text/javascript' src='ajax.js'></script>"
       "<div id='clear'></div>"
         "<div id='footer' class='rnd'>"
-          "<div id='time'><span><b>";
+          "<div id='time'>"
+		  //"<span>"
+		  "<b>";
 
 const char *html_page_end2  = 
       "</b></div>"            // local time
-          "<div id='fw'><span><b>v.";
+          "<div id='fw'>"
+		  //"<span>"
+		  "<b>v.";
   
 const char *html_page_end3  = 
-      "</b></span></div>"     // fw version
+      "</b>"
+	  //"</span>"
+	  "</div>"     // fw version
         "</div>"
       "</div>"
 	  "</body>"
@@ -84,14 +90,20 @@ const char *html_page_menu_item3  =  "</a></li>";
 
 const char *html_page_devinfo1  = 
   "<div id='dev-info' class='rnd brd-btm'>"
-	  "<div id='memory'><span><b>Free heap: </b> ";
+	  "<div id='memory'>"
+	  //"<span>"
+	  "<b>Free heap: </b> ";
 
 const char *html_page_devinfo2  = 
-  "</span></div>"  // free mem
-    "<div id='uptime'><span><b>Uptime: </b> ";
+  //"</span>"
+  "</div>"  // free mem
+    "<div id='uptime'>"
+	//"<span>"
+	"<b>Uptime: </b> ";
 
 const char *html_page_devinfo3  = 
-  "</span></div>"     // uptime
+  //"</span>"
+  "</div>"     // uptime
   "</div>";
 
 
@@ -124,46 +136,61 @@ const char *html_block_data_div_lf3  =
 
 const char *html_block_data_form_submit  = 
 
-			"<div class='rh2'><p><input type='hidden' name='st' value='%s'></p>"
-			"<p><input type='submit' value='Сохранить' class='button norm rht'></p>";
+			//"<div class='rh2'><p><input type='hidden' name='st' value='%s'></p>"
+			//"<div class='rh2'>"
+			"<input type='hidden' name='st' value='%s'>"
+			//"<p><input type='submit' value='Сохранить' class='button norm rht'></p>";
+			"<input type='submit' value='Сохранить' class='button norm rht'>";
 
 const char *html_block_data_form_submit_set  = 
 
-			"<p><input type='hidden' name='st' value='%s'></p>"
-			"<p ><input type='submit' value='Сохранить' class='button norm'></p>";
+			//"<p><input type='hidden' name='st' value='%s'></p>"
+			"<input type='hidden' name='st' value='%s'>"
+			//"<p ><input type='submit' value='Сохранить' class='button norm'></p>";
+			"<input type='submit' value='Сохранить' class='button norm'>";
 
 const char *html_block_data_form_submit_del  = 
 
-			"<p><input type='hidden' name='st' value='%s'></p>"
-			"<p><input type='submit' value='Удалить' class='button norm'></p>";
+			//"<p><input type='hidden' name='st' value='%s'></p>"
+			"<input type='hidden' name='st' value='%s'>"
+			//"<p><input type='submit' value='Удалить' class='button norm'></p>";
+			"<input type='submit' value='Удалить' class='button norm'>";
 
 
 const char *html_block_data_form_end  = 
 		"</form>";
 
 const char *html_block_data_form_item_label_w65_label  = 
-		"<p><label class='lf' style='width:65%%'>%s: </label><label>%s</label></p>";
+		//"<p><label class='lf' style='width:65%%'>%s: </label><label>%s</label></p>";
+		"<label class='lf' style='width:65%%'>%s: </label><label>%s</label>";
 
 const char *html_block_data_form_item_label  = 
 		"<label class='lf'>%s: </label>";
 
 
 const char *html_block_data_form_item_label_label  = 
-		"<p><label class='lf'>%s: </label><label>%s</label></p>";
+		//"<p><label class='lf'>%s: </label><label>%s</label></p>";
+		"<label class='lf'>%s: </label><label>%s</label>";
 
 const char *html_block_data_form_item_label_edit  = 
-		"<p><label class='lf'>%s: </label><input size='20' name='%s' class='edit rh' value='%s' /></p>";
+		//"<p><label class='lf'>%s: </label><input size='20' name='%s' class='edit rh' value='%s' /></p>";
+		"<label class='lf'>%s: </label><input size='20' name='%s' class='edit rh' value='%s' />";
 
 const char *html_block_data_form_item_label_edit_hex  = 
-		"<p><label class='lf'>%s: </label><input size='20' name='%s' class='edit rh' value='%s' /></p>";
+		//"<p><label class='lf'>%s: </label><input size='20' name='%s' class='edit rh' value='%s' /></p>";
+		"<label class='lf'>%s: </label><input size='20' name='%s' class='edit rh' value='%s' />";
 
 const char *html_block_data_form_item_edit_edit  = 
-		"<p><input size='20' name='%s' class='edit rh' value='%s' />/<input size='20' name='%s' class='edit rh' value='%s' /></p>";
+		//"<p><input size='20' name='%s' class='edit rh' value='%s' />/<input size='20' name='%s' class='edit rh' value='%s' /></p>";
+		"<input size='20' name='%s' class='edit rh' value='%s' />/<input size='20' name='%s' class='edit rh' value='%s' />";
 
 
 const char *html_block_data_form_item_checkbox  = 
-		"<p><label class='lf'>%s: </label><input type='checkbox' name='%s' class='edit rh' value='%d' %s /></p>";
+		//"<p><label class='lf'>%s: </label><input type='checkbox' name='%s' class='edit rh' value='%d' %s /></p>";
+		"<label class='lf'>%s: </label><input type='checkbox' name='%s' class='edit rh' value='%d' %s />";
 
+const char *html_block_data_form_item_radio  = 
+	"<input type='radio' name='%s' value='%s' %s />%s" ;
 
 // ============ buttons =========================================
 const char *html_button  =
@@ -184,3 +211,5 @@ const char *html_button  =
 const char *html_selected = "selected=\"selected\" ";			
 const char *html_select_end = "</select>";
 const char *html_select_item = "<option value=\"%d\" %s>%s</option>";
+
+const char *html_checkbox_checked = "checked";

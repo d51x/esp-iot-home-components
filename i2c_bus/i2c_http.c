@@ -59,7 +59,7 @@ void i2c_print_options(http_args_t *args)
     httpd_resp_sendstr_chunk_fmt(req, html_block_data_form_submit, PARAM_I2C ); // %s st    
 
     // ==========================================================================
-    httpd_resp_sendstr_chunk(req, html_block_data_end);
+    //httpd_resp_sendstr_chunk(req, html_block_data_end);
     httpd_resp_sendstr_chunk(req, html_block_data_form_end);
 #ifdef CONFIG_COMPONENT_I2C_SCANNER
     httpd_resp_sendstr_chunk(req, html_page_tools_i2c_scan);

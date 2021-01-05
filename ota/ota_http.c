@@ -14,8 +14,10 @@ const char *html_page_ota ICACHE_RODATA_ATTR =
   //"<p>Выбрать Firmware</p>"
   "<form enctype='multipart/form-data' method='post' action='"HTTP_URI_OTA"'>" 
     "<input type='file' name='file' id='selectedFile' style='display: none;'   accept='.bin'onchange='otaGet(%d)' />" 
-    "<p><input type='button' class='button norm rh' value='Browse...' onclick=\"document.getElementById('selectedFile').click();\" /></p>"
-    "<p><div class='lf2'><input type='submit' value='Загрузить' class='button norm rht' onclick=\"updFw()\" /></p>"
+    //"<p><input type='button' class='button norm rh' value='Browse...' onclick=\"document.getElementById('selectedFile').click();\" /></p>"
+    "<input type='button' class='button norm rh' value='Browse...' onclick=\"document.getElementById('selectedFile').click();\" />"
+    //"<p><div class='lf2'><input type='submit' value='Загрузить' class='button norm rht' onclick=\"updFw()\" /></p>"
+    "<div class='lf2'><input type='submit' value='Загрузить' class='button norm rht' onclick=\"updFw()\" />"
   //"</form>"
   ; 
 

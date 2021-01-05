@@ -50,7 +50,7 @@ static void mqtt_print_options(http_args_t *args)
                                 , html_page_label_enable // %s label
                                 , URI_PARAM_MQTT_EN   // %s name
                                 , mqtt_cfg->enabled  // %d value
-                                , mqtt_cfg->enabled ? "checked" : ""
+                                , mqtt_cfg->enabled ? html_checkbox_checked : ""
                                 );
 
     // ==========================================================================
@@ -98,7 +98,7 @@ static void mqtt_print_options(http_args_t *args)
 
     // ==========================================================================
     httpd_resp_sendstr_chunk(req, html_block_data_form_end);
-    httpd_resp_sendstr_chunk(req, html_block_data_end);
+    //httpd_resp_sendstr_chunk(req, html_block_data_end);
     httpd_resp_sendstr_chunk(req, html_block_data_end);
 }
 

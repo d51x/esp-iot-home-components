@@ -59,6 +59,7 @@ extern const char *html_block_data_form_item_label_label ICACHE_RODATA_ATTR;
 extern const char *html_block_data_form_item_label_edit ICACHE_RODATA_ATTR;
 extern const char *html_block_data_form_item_label_edit_hex ICACHE_RODATA_ATTR;
 extern const char *html_block_data_form_item_checkbox  ICACHE_RODATA_ATTR;
+extern const char *html_block_data_form_item_radio  ICACHE_RODATA_ATTR;
 
 // ======================= button ============================
 extern const char *html_button ICACHE_RODATA_ATTR;
@@ -67,4 +68,6 @@ extern const char *html_button ICACHE_RODATA_ATTR;
 extern const char *html_selected ICACHE_RODATA_ATTR;
 extern const char *html_select_end ICACHE_RODATA_ATTR;
 extern const char *html_select_item ICACHE_RODATA_ATTR;
+
+extern const char *html_checkbox_checked ICACHE_RODATA_ATTR;
 #endif 

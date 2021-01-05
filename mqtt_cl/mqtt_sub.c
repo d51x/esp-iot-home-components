@@ -431,8 +431,10 @@ static void mqtt_subscriber_print_options(http_args_t *args)
 
     httpd_resp_sendstr_chunk_fmt(req, "<button class='button norm rh2' onclick='mqttsuba(\"%s\",%d,%d)'>New</button>"
                                       "<div>"
-                                      "<p> <span id='basecnt'>Base topics: %d</span><span>/%d</span></p>"
-                                      "<p> <span id='endpcnt'>Endpoints: %d</span><span>/%d</span></p>"
+                                      //"<p> <span id='basecnt'>Base topics: %d</span><span>/%d</span></p>"
+                                      "<span id='basecnt'>Base topics: %d</span><span>/%d</span>"
+                                      //"<p> <span id='endpcnt'>Endpoints: %d</span><span>/%d</span></p>"
+                                      "<span id='endpcnt'>Endpoints: %d</span><span>/%d</span>"
                                       "</div>"
                                       "<hr>"
                 , "mqttpcs"

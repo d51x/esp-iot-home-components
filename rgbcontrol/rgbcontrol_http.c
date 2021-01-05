@@ -182,7 +182,7 @@ static void rgbcontrol_print_options(http_args_t *args)
     httpd_resp_sendstr_chunk_fmt(req, html_block_data_form_submit, rgb_param_rgb);
     httpd_resp_sendstr_chunk(req, html_block_data_form_end);
     // ==========================================================================    
-    httpd_resp_sendstr_chunk(req, html_block_data_end);    
+    //httpd_resp_sendstr_chunk(req, html_block_data_end);    
     httpd_resp_sendstr_chunk(req, html_block_data_end); 
 
 }

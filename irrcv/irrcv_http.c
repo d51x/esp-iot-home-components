@@ -54,7 +54,7 @@ static void irrcv_print_cfg(http_args_t *args)
                                     , label_ir_en // %s label
                                     , param_iren   // %s name
                                     , dev->enabled  // %d value
-                                    , dev->enabled ? "checked" : ""
+                                    , dev->enabled ? html_checkbox_checked : ""
                                 );
 
     // ==========================================================================
@@ -81,7 +81,7 @@ static void irrcv_print_cfg(http_args_t *args)
 
     // ==========================================================================
     httpd_resp_sendstr_chunk(req, html_block_data_form_end);
-    httpd_resp_sendstr_chunk(req, html_block_data_end);    
+    //httpd_resp_sendstr_chunk(req, html_block_data_end);    
     httpd_resp_sendstr_chunk(req, html_block_data_end);
 }
 
