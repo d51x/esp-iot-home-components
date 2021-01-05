@@ -28,15 +28,14 @@ const char *effects_select_start ICACHE_RODATA_ATTR =  "<div class='ef'>"
                                                             "<select id=\"effects\" onchange=\"effects()\">";
 
     
-const char *effects_select_end ICACHE_RODATA_ATTR = "</select></div>";
+#define effects_select_end html_select_end
 
-const char *effects_item ICACHE_RODATA_ATTR = "<option value=\"%d\" %s>%s</option>";
+#define effects_item html_select_item
 #endif
 
 
 
-const char *effects_data_end ICACHE_RODATA_ATTR = "</div>";
-const char *html_selected ICACHE_RODATA_ATTR = "selected=\"selected\" ";
+#define effects_data_end html_block_data_end
 
 const char *rgb_param_red_channel ICACHE_RODATA_ATTR = "redch";
 const char *rgb_param_green_channel ICACHE_RODATA_ATTR = "greench";
@@ -137,6 +136,7 @@ static void rgbcontrol_print_data(http_args_t *args)
         }
 
         httpd_resp_sendstr_chunk(req, effects_select_end);
+        httpd_resp_sendstr_chunk(req, html_block_data_end);
     #endif
 
     //strcat(data, html_block_rgb_control_end);
@@ -225,7 +225,9 @@ void rgbcontrol_register_http_print_data(rgbcontrol_handle_t dev_h)
     http_args_t *p = calloc(1,sizeof(http_args_t));
     p->dev = dev_h;
     register_print_page_block( rgb_param_rgb, PAGES_URI[ PAGE_URI_ROOT], 7, rgbcontrol_print_data, p, NULL, NULL );
+    #ifdef CONFIG_PAGE_TOOLS
     register_print_page_block( "rgb_opt", PAGES_URI[ PAGE_URI_TOOLS], 4, rgbcontrol_print_options, p, rgbcontrol_process_params, p );
+    #endif
 }
 
 static esp_err_t http_process_rgb(httpd_req_t *req, char *param, size_t size)
