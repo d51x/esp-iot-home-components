@@ -101,6 +101,9 @@ static esp_err_t relay_get_handler(httpd_req_t *req)
                 {
                     if ( relays[i].pin == pin )
                     {
+                        if ( st > 1) {
+                            st = !relays[i].state;
+                        }
                         err =  relay_write( (relay_handle_t)&relays[i], st);
                         itoa(st, param, 10);
                         httpd_resp_sendstr_chunk(req, param);
