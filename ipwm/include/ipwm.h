@@ -12,27 +12,28 @@
 
 
 
-#define PIN_PWM_0 15
-#define PIN_PWM_1 12
-#define PIN_PWM_2 13
-#define PIN_PWM_CNT 3
+//#define PIN_PWM_0 15
+//#define PIN_PWM_1 12
+//#define PIN_PWM_2 13
+//#define PIN_PWM_CNT 3
 // red 15, green 12, blue 13
-#define LED_GREEN 1
-#define LED_RED 0
-#define LED_BLUE 2
+//#define LED_GREEN 1
+//#define LED_RED 0
+//#define LED_BLUE 2
 
 
 #define PWM_FREQ_HZ    500  // 1000 Hz
 #define MAX_DUTY 255  // 8 bit
-#define STEP 1
-#define FADE_TIME 40
+//#define STEP 1
+//#define FADE_TIME 40
 
+/*
 static const uint32_t pwm_pins[PIN_PWM_CNT] = {
     PIN_PWM_0,
     PIN_PWM_1,
     PIN_PWM_2
 };
-
+*/
 
 
 
