@@ -45,6 +45,7 @@ esp_err_t nvs_param_str_save(const char* space_name, const char* key, const char
 esp_err_t nvs_param_load(const char* space_name, const char* key, void* dest);
 esp_err_t nvs_param_i8_load(const char* space_name, const char* key, int8_t* dest);
 esp_err_t nvs_param_u8_load(const char* space_name, const char* key, uint8_t* dest);
+esp_err_t nvs_param_u8_load_def(const char* space_name, const char* key, uint8_t* dest, uint8_t def);
 esp_err_t nvs_param_i16_load(const char* space_name, const char* key, int16_t* dest);
 esp_err_t nvs_param_u16_load(const char* space_name, const char* key, uint16_t* dest);
 esp_err_t nvs_param_i32_load(const char* space_name, const char* key, int32_t* dest);
