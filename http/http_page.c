@@ -125,6 +125,12 @@ void page_generate_top_header(httpd_req_t *req)
     page_show_menu(req); //char *menu = malloc((strlen(html_page_menu_item) + 10 + 10)* menu_items_count + 1);
     
     httpd_resp_sendstr_chunk(req, html_page_top_header4);
+
+    // httpd_resp_sendstr_chunk(req, html_block_data_end);
+    // httpd_resp_sendstr_chunk(req, html_block_data_end);
+    // httpd_resp_sendstr_chunk(req, html_block_data_end);
+    // httpd_resp_sendstr_chunk(req, html_block_data_end);
+
     httpd_resp_sendstr_chunk(req, html_page_devinfo1);
 
     char *buf_mem = malloc(8);
@@ -137,7 +143,9 @@ void page_generate_top_header(httpd_req_t *req)
     get_uptime(uptime);
     httpd_resp_sendstr_chunk(req, uptime);
     free(uptime);
-    httpd_resp_sendstr_chunk(req, html_page_devinfo3);
+    //httpd_resp_sendstr_chunk(req, html_page_devinfo3);
+    httpd_resp_sendstr_chunk(req, html_block_data_end);
+    httpd_resp_sendstr_chunk(req, html_block_data_end);
 }
 
 void page_generate_data(httpd_req_t *req, const char *uri)

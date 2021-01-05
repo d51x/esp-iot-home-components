@@ -7,6 +7,10 @@ static const char *TAG = "MQTTSUBS";
 const char *html_page_title_mqtt_sensors ICACHE_RODATA_ATTR = "MQTT Sensors";
 const char *html_page_title_mqtt_sensors_cfg ICACHE_RODATA_ATTR = "MQTT Sensors Config";
 
+const char *html_block_data_form_item_label_w65_label  = 
+		//"<p><label class='lf' style='width:65%%'>%s: </label><label>%s</label></p>";
+		"<label class='lf' style='width:65%%'>%s: </label><label>%s</label>";
+
 static uint8_t base_topics_count = 0;
 static uint8_t end_points_count = 0;
 

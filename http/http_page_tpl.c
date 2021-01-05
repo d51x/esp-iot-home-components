@@ -15,6 +15,9 @@ const char *html_error   = "ERROR";
 //char *menu_uri[MENU_ITEM_COUNT] = {"/", "/setup", "/tools", "/update", "/debug"};   // 10 char
 //char *menu_names[MENU_ITEM_COUNT] = {"Main", "Setup", "Tools", "Update", "Debug"};  // 10 char
 
+const char *html_block_data_end  = 
+		"</div>";  
+
 const char *html_page_start1 =    
   "<!DOCTYPE html>"
   "<html>"
@@ -55,7 +58,7 @@ const char *html_page_end3  =
 
 const char *html_page_content_start  = "<div class='data'>";
 
-const char *html_page_content_end  = "</div>";
+//const char *html_page_content_end  = "</div>";
 
 const char *html_page_top_header1  = 
   "<div id='header' class='bg'>"
@@ -82,7 +85,8 @@ const char *html_page_top_header4  =
 	      "</div>"
 	    "</div>"
 	  "</div>"
-	"</div>";
+	"</div>"
+	;
 
 const char *html_page_menu_item1  =  "<li><a href='";
 const char *html_page_menu_item2  =  "'>";
@@ -101,10 +105,10 @@ const char *html_page_devinfo2  =
 	//"<span>"
 	"<b>Uptime: </b> ";
 
-const char *html_page_devinfo3  = 
-  //"</span>"
-  "</div>"     // uptime
-  "</div>";
+// const char *html_page_devinfo3  = 
+//   //"</span>"
+//   "</div>"     // uptime
+//   "</div>";
 
 
 
@@ -124,8 +128,7 @@ const char *html_block_data_header_start  =
 const char *html_block_data_no_header_start  = 
 		"<div class='group rnd'>";   
 
-const char *html_block_data_end  = 
-		"</div>";  
+
 
 // ====== forms  ======================================================================
 const char *html_block_data_form_start  = 
@@ -142,27 +145,27 @@ const char *html_block_data_form_submit  =
 			//"<p><input type='submit' value='Сохранить' class='button norm rht'></p>";
 			"<input type='submit' value='Сохранить' class='button norm rht'>";
 
-const char *html_block_data_form_submit_set  = 
+// const char *html_block_data_form_submit_set  = 
 
-			//"<p><input type='hidden' name='st' value='%s'></p>"
-			"<input type='hidden' name='st' value='%s'>"
-			//"<p ><input type='submit' value='Сохранить' class='button norm'></p>";
-			"<input type='submit' value='Сохранить' class='button norm'>";
+// 			//"<p><input type='hidden' name='st' value='%s'></p>"
+// 			"<input type='hidden' name='st' value='%s'>"
+// 			//"<p ><input type='submit' value='Сохранить' class='button norm'></p>";
+// 			"<input type='submit' value='Сохранить' class='button norm'>";
 
-const char *html_block_data_form_submit_del  = 
+// const char *html_block_data_form_submit_del  = 
 
-			//"<p><input type='hidden' name='st' value='%s'></p>"
-			"<input type='hidden' name='st' value='%s'>"
-			//"<p><input type='submit' value='Удалить' class='button norm'></p>";
-			"<input type='submit' value='Удалить' class='button norm'>";
+// 			//"<p><input type='hidden' name='st' value='%s'></p>"
+// 			"<input type='hidden' name='st' value='%s'>"
+// 			//"<p><input type='submit' value='Удалить' class='button norm'></p>";
+// 			"<input type='submit' value='Удалить' class='button norm'>";
 
 
 const char *html_block_data_form_end  = 
 		"</form>";
 
-const char *html_block_data_form_item_label_w65_label  = 
+//const char *html_block_data_form_item_label_w65_label  = 
 		//"<p><label class='lf' style='width:65%%'>%s: </label><label>%s</label></p>";
-		"<label class='lf' style='width:65%%'>%s: </label><label>%s</label>";
+//		"<label class='lf' style='width:65%%'>%s: </label><label>%s</label>";
 
 const char *html_block_data_form_item_label  = 
 		"<label class='lf'>%s: </label>";

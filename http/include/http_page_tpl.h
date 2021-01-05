@@ -19,8 +19,11 @@ extern const char *html_page_end1 ICACHE_RODATA_ATTR;
 extern const char *html_page_end2 ICACHE_RODATA_ATTR;
 extern const char *html_page_end3 ICACHE_RODATA_ATTR;
 
+extern const char *html_block_data_end ICACHE_RODATA_ATTR;  
+
 extern const char *html_page_content_start ICACHE_RODATA_ATTR;
-extern const char *html_page_content_end ICACHE_RODATA_ATTR;
+// extern const char *html_page_content_end ICACHE_RODATA_ATTR;
+#define html_page_content_end html_block_data_end
 
 extern const char *html_page_top_header1 ICACHE_RODATA_ATTR;
 extern const char *html_page_top_header2 ICACHE_RODATA_ATTR;
@@ -33,7 +36,7 @@ extern const char *html_page_menu_item3 ICACHE_RODATA_ATTR;
 
 extern const char *html_page_devinfo1 ICACHE_RODATA_ATTR;
 extern const char *html_page_devinfo2 ICACHE_RODATA_ATTR;
-extern const char *html_page_devinfo3 ICACHE_RODATA_ATTR;
+//extern const char *html_page_devinfo3 ICACHE_RODATA_ATTR;
 
 extern const char *html_page_reboot_button_block ICACHE_RODATA_ATTR;
 
@@ -41,20 +44,19 @@ extern const char *html_page_reboot_button_block ICACHE_RODATA_ATTR;
 // ====== data block  ======================================================================
 extern const char *html_block_data_header_start ICACHE_RODATA_ATTR;   
 extern const char *html_block_data_no_header_start ICACHE_RODATA_ATTR;   
-extern const char *html_block_data_end ICACHE_RODATA_ATTR;  
 
 // ====== forms  ======================================================================
 extern const char *html_block_data_form_start ICACHE_RODATA_ATTR;  
 extern const char *html_block_data_div_lf3 ICACHE_RODATA_ATTR;  
 
 extern const char *html_block_data_form_submit ICACHE_RODATA_ATTR;
-extern const char *html_block_data_form_submit_set ICACHE_RODATA_ATTR;
-extern const char *html_block_data_form_submit_del ICACHE_RODATA_ATTR;
+//extern const char *html_block_data_form_submit_set ICACHE_RODATA_ATTR;
+//extern const char *html_block_data_form_submit_del ICACHE_RODATA_ATTR;
 
 extern const char *html_block_data_form_end ICACHE_RODATA_ATTR;
 
 extern const char *html_block_data_form_item_label ICACHE_RODATA_ATTR;
-extern const char *html_block_data_form_item_label_w65_label ICACHE_RODATA_ATTR;
+//extern const char *html_block_data_form_item_label_w65_label ICACHE_RODATA_ATTR;
 extern const char *html_block_data_form_item_label_label ICACHE_RODATA_ATTR;
 extern const char *html_block_data_form_item_label_edit ICACHE_RODATA_ATTR;
 extern const char *html_block_data_form_item_label_edit_hex ICACHE_RODATA_ATTR;
