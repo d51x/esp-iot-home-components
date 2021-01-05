@@ -78,6 +78,7 @@ void mqtt_get_cfg(mqtt_config_t *cfg);
 void mqtt_save_cfg(const mqtt_config_t *cfg);
 void mqtt_set_device_name(const char *dev_name);
 void mqtt_publish(const char *_topic, const char *payload);
+void mqtt_publish_external(const char *_topic, const char *payload);
 void mqtt_unsubscribe_topic(const char *topic);
 void mqtt_subscribe_topic(const char *topic);
 // просто отправить данные

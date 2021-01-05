@@ -364,6 +364,20 @@ void mqtt_publish(const char *_topic, const char *payload)
     mqtt_publish_generic( _topic, payload);
 }
 
+void mqtt_publish_external(const char *_topic, const char *payload)
+{
+    if ( !mqtt_client ) {
+        ESP_LOGE(TAG, "mqtt_client is not initialized");
+        return;
+    }
+    if ( mqtt_state != 1) {
+        ESP_LOGW(TAG, "mqtt client disconneted. publish disabled for topic %s", _topic);
+        return;
+    }
+
+    esp_mqtt_client_publish(mqtt_client, _topic, payload, strlen(payload), 0, 1);
+}
+
 void mqtt_add_periodic_publish_callback( const char *topic, func_mqtt_send_cb fn_cb, void *args)
 {
 
