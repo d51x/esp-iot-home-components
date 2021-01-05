@@ -144,6 +144,10 @@ const char *html_block_data_form_end  =
 const char *html_block_data_form_item_label_w65_label  = 
 		"<p><label class='lf' style='width:65%%'>%s: </label><label>%s</label></p>";
 
+const char *html_block_data_form_item_label  = 
+		"<label class='lf'>%s: </label>";
+
+
 const char *html_block_data_form_item_label_label  = 
 		"<p><label class='lf'>%s: </label><label>%s</label></p>";
 
@@ -174,3 +178,9 @@ const char *html_button  =
 																																					// st: менять состояние кнопки 1, не менять состояние кнопки 0
 											"%s"
 			"</button>" ;
+
+
+
+const char *html_selected = "selected=\"selected\" ";			
+const char *html_select_end = "</select>";
+const char *html_select_item = "<option value=\"%d\" %s>%s</option>";
