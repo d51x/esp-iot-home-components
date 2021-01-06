@@ -141,6 +141,7 @@ static void rgbcontrol_print_data(http_args_t *args)
 
     //strcat(data, html_block_rgb_control_end);
     httpd_resp_sendstr_chunk(req, html_block_rgb_control_end);
+    httpd_resp_sendstr_chunk(req, "<script type='text/javascript' src='rgb.js'></script>");
 }
 
 static void rgbcontrol_print_options(http_args_t *args)

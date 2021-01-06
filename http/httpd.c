@@ -33,6 +33,9 @@ void register_uri_handlers(httpd_handle_t _server) {
     add_uri_get_handler( _server, PAGES_URI[PAGE_URI_AJAX], main_ajax_get_handler, NULL); 
     #ifdef CONFIG_SENSOR_MQTT
     add_uri_get_handler( _server, PAGES_URI[PAGE_URI_MQTT_JS], main_mqtt_js_get_handler, NULL); 
+    #endif    
+    #ifdef CONFIG_RGB_CONTROLLER
+    add_uri_get_handler( _server, PAGES_URI[PAGE_URI_RGB_JS], main_rgb_js_get_handler, NULL); 
     #endif
     add_uri_get_handler( _server, "/menu.png", icons_get_handler, NULL); 
     add_uri_get_handler( _server, "/menu2.png", icons_get_handler, NULL); 

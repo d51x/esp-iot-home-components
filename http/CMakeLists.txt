@@ -11,6 +11,7 @@ set(COMPONENT_EMBED_TXTFILES 	${PROJECT_PATH}/${EXTRA_COMPONENT_DIRS}/web/favico
 								${PROJECT_PATH}/${EXTRA_COMPONENT_DIRS}/web/menu2.png
 								${PROJECT_PATH}/${EXTRA_COMPONENT_DIRS}/web/main.min.css
 								${PROJECT_PATH}/${EXTRA_COMPONENT_DIRS}/web/mqtt.min.js 
+								${PROJECT_PATH}/${EXTRA_COMPONENT_DIRS}/web/rgb.min.js 
                                 ${PROJECT_PATH}/${EXTRA_COMPONENT_DIRS}/web/ajax.min.js )
                                 
 register_component()

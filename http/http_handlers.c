@@ -33,7 +33,10 @@ const char *PAGES_URI[PAGE_URI_MAX] = {
     "/main.css",            // PAGE_URI_CSS
     "/ajax.js",             // PAGE_URI_AJAX
     #ifdef CONFIG_SENSOR_MQTT
-    "/mqtt.js",             // PAGE_URI_AJAX
+    "/mqtt.js",             
+    #endif           
+    #ifdef CONFIG_RGB_CONTROLLER
+    "/rgb.js",             
     #endif
     "/favicon.ico",         // PAGE_URI_FAVICO
     HTTP_URI_ICON_MENU,            // PAGE_URI_ICON_MENU
@@ -283,6 +286,17 @@ esp_err_t main_mqtt_js_get_handler(httpd_req_t *req)
 }
 #endif
 
+#ifdef CONFIG_RGB_CONTROLLER
+esp_err_t main_rgb_js_get_handler(httpd_req_t *req)
+{
+    extern const unsigned char rgb_js_start[] asm("_binary_rgb_min_js_start");
+    extern const unsigned char rgb_js_end[]   asm("_binary_rgb_min_js_end");
+    const size_t rgb_js_size = (rgb_js_end - rgb_js_start);
+    httpd_resp_set_type(req, "text/javascript");
+    httpd_resp_send(req, (const char *)rgb_js_start, rgb_js_size);
+    return ESP_OK;
+}
+#endif
 
 // TODO show custom page handler from component
 //show_http_page( req, page);
