@@ -314,6 +314,17 @@ OPEN_FAIL:
     return ret;
 }
 
+esp_err_t nvs_param_u16_load_def(const char* space_name, const char* key, uint16_t* dest, uint16_t def)
+{
+    esp_err_t err = nvs_param_u16_load(space_name, key, dest);
+    if ( err != ESP_OK )
+    {
+        *dest = def;
+        ESP_LOGE(TAG, "error load \"%s\", set to default %d", key, def);
+    }
+    return err;
+}
+
 esp_err_t nvs_param_i32_load(const char* space_name, const char* key, int32_t* dest)
 {
     esp_err_t ret = ESP_ERR_INVALID_ARG;
