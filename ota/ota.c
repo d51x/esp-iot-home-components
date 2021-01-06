@@ -34,7 +34,7 @@ esp_err_t ota_task_upgrade_from_web(httpd_req_t *req, char *err_text){
 
     ota_status.total = file_len;
 
-    char fname[32];
+    char fname[OTA_FILENAME_LENGTH];
     int recv_len;           // принято за раз
     int remain = total_len;  // осталось загрузить
     int received = 0;  // загружено
@@ -112,7 +112,7 @@ esp_err_t ota_task_upgrade_from_web(httpd_req_t *req, char *err_text){
             //ESP_LOGW(TAG, "%s", post_data);
             post_data = strstr(post_data, "filename=") + 10;
             post_data = copy_str_from_str(post_data, "\"");
-            strncpy(fname, post_data, 32);
+            strncpy(fname, post_data, OTA_FILENAME_LENGTH);
             //file_len = body_start_p - upgrade_data_buf;
             file_len = total_len - 196;
             ota_status.total = file_len;
