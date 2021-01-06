@@ -95,6 +95,9 @@ enum {
     PAGE_URI_REBOOT,
     PAGE_URI_CSS,
     PAGE_URI_AJAX,
+    #ifdef CONFIG_SENSOR_MQTT
+    PAGE_URI_MQTT_JS,
+    #endif
     PAGE_URI_FAVICO,
     PAGE_URI_ICON_MENU,
     PAGE_URI_ICON_MENU2,
@@ -175,6 +178,9 @@ esp_err_t icon_wifi_get_handler(httpd_req_t *req);
 
 esp_err_t main_css_get_handler(httpd_req_t *req);
 esp_err_t main_ajax_get_handler(httpd_req_t *req);
+#ifdef CONFIG_SENSOR_MQTT
+esp_err_t main_mqtt_js_get_handler(httpd_req_t *req);
+#endif
 
 // uri - параметры какого uri будем обрабатывать
 // fn_cb - функция коллбека обработки данных

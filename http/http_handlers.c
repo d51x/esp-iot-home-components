@@ -32,6 +32,9 @@ const char *PAGES_URI[PAGE_URI_MAX] = {
     HTTP_URI_REBOOT,              // PAGE_URI_REBOOT
     "/main.css",            // PAGE_URI_CSS
     "/ajax.js",             // PAGE_URI_AJAX
+    #ifdef CONFIG_SENSOR_MQTT
+    "/mqtt.js",             // PAGE_URI_AJAX
+    #endif
     "/favicon.ico",         // PAGE_URI_FAVICO
     HTTP_URI_ICON_MENU,            // PAGE_URI_ICON_MENU
     HTTP_URI_ICON_MENU2            // PAGE_URI_ICON_MENU2
@@ -267,6 +270,18 @@ esp_err_t main_ajax_get_handler(httpd_req_t *req)
     httpd_resp_send(req, (const char *)ajax_js_start, ajax_js_size);
     return ESP_OK;
 }
+
+#ifdef CONFIG_SENSOR_MQTT
+esp_err_t main_mqtt_js_get_handler(httpd_req_t *req)
+{
+    extern const unsigned char mqtt_js_start[] asm("_binary_mqtt_min_js_start");
+    extern const unsigned char mqtt_js_end[]   asm("_binary_mqtt_min_js_end");
+    const size_t mqtt_js_size = (mqtt_js_end - mqtt_js_start);
+    httpd_resp_set_type(req, "text/javascript");
+    httpd_resp_send(req, (const char *)mqtt_js_start, mqtt_js_size);
+    return ESP_OK;
+}
+#endif
 
 
 // TODO show custom page handler from component

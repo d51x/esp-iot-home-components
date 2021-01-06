@@ -33,6 +33,7 @@ const char *html_page_start2 =
     "<body>"
       "<div id='main'>"; 
 
+
 const char *html_page_end1  = 
       "<script type='text/javascript' src='ajax.js'></script>"
       "<div id='clear'></div>"
@@ -76,7 +77,7 @@ const char *html_page_top_header3  =
  " dBm</h4>"
       "</div>"
 	    "<div class='dropdown'>"
-        "<button class='dropbtn'></button>"
+        "<div class='dropbtn'></div>"
 	      "<div class='dropdown-content bg'>"
 	        "<ul>";
 

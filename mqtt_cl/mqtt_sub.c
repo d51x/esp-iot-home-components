@@ -434,12 +434,13 @@ static void mqtt_subscriber_print_options(http_args_t *args)
     httpd_resp_sendstr_chunk_fmt(req, html_block_data_header_start, html_page_title_mqtt_sensors_cfg);
 
     httpd_resp_sendstr_chunk_fmt(req, "<button class='button norm rh2' onclick='mqttsuba(\"%s\",%d,%d)'>New</button>"
-                                      "<div>"
+                                      //"<div>"
                                       //"<p> <span id='basecnt'>Base topics: %d</span><span>/%d</span></p>"
-                                      "<span id='basecnt'>Base topics: %d</span><span>/%d</span>"
+                                      "<label id='basecnt'>Base topics: %d/%d</label>"
+                                      "<br>"
                                       //"<p> <span id='endpcnt'>Endpoints: %d</span><span>/%d</span></p>"
-                                      "<span id='endpcnt'>Endpoints: %d</span><span>/%d</span>"
-                                      "</div>"
+                                      "<label id='endpcnt'>Endpoints: %d/%d</label>"
+                                      //"</div>"
                                       "<hr>"
                 , "mqttpcs"
                 , base_topics_count
@@ -511,6 +512,9 @@ static void mqtt_subscriber_print_options(http_args_t *args)
 
     httpd_resp_sendstr_chunk(req, "</div>");
     httpd_resp_sendstr_chunk(req, html_block_data_end);  
+
+    httpd_resp_sendstr_chunk(req, "<script type='text/javascript' src='mqtt.js'></script>");
+
 }
 
 void mqtt_subscriber_register_http_print_data()
