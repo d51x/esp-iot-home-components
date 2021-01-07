@@ -4,12 +4,16 @@
 
 #ifdef CONFIG_COMPONENT_RELAY
 
+#ifndef IOT_CHECK
 #define IOT_CHECK(tag, a, ret)  if(!(a)) {                                 \
         ESP_LOGE(tag,"%s:%d (%s)", __FILE__, __LINE__, __FUNCTION__);      \
         return (ret);                                                      \
         }
-#define POINT_ASSERT(tag, param)	IOT_CHECK(tag, (param) != NULL, ESP_FAIL)
+#endif
 
+#ifndef POINT_ASSERT
+#define POINT_ASSERT(tag, param)	IOT_CHECK(tag, (param) != NULL, ESP_FAIL)
+#endif
 
 
 
@@ -70,7 +74,7 @@ relay_handle_t relay_create(const char *name, gpio_num_t pin, relay_level_t leve
     //ESP_LOGW(TAG, "%s: relays[relay_count-1] = %p", __func__, relays[relay_count-1]);
 
     relay_p->pin = pin;
-    relay_p->name = name;
+    relay_p->name = strdup(name);
     relay_p->level = level;
     relay_p->save = save;
 
