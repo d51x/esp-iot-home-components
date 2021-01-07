@@ -17,22 +17,22 @@
 typedef void* relay_handle_t;
 
 typedef enum {
-    RELAY_LEVEL_LOW = 0,    
-    RELAY_LEVEL_HIGH = 1,   
-} relay_close_level_t;
+    RELAY_LEVEL_HIGH = 0,
+    RELAY_LEVEL_LOW = 1,    
+} relay_level_t;
 
 typedef enum {
-    RELAY_STATE_CLOSE = 0,
-    RELAY_STATE_OPEN,
+    RELAY_STATE_OFF = 0,  // OFF
+    RELAY_STATE_ON,     // ON
 } relay_state_t;
 
 
 typedef struct  {
 	  gpio_num_t pin;
     relay_state_t state;
-    relay_close_level_t close_level;
+    relay_level_t level;
     relay_state_t prev;
-    bool save_state;
+    bool save;
     char *name;
 } relay_t;   
 
@@ -46,11 +46,11 @@ extern QueueHandle_t relay_status_queue;
   * @brief create relay object.
   *
   * @param io_num - pin 
-  * @param level - open level - normal = HIGH, invert = LOW 
+  * @param level - on level - normal = HIGH, invert = LOW 
   *
   * @return relay_handle_t the handle of the relay created 
   */
-relay_handle_t relay_create(const char *name, gpio_num_t io_num, relay_close_level_t level, bool save_state);
+relay_handle_t relay_create(const char *name, gpio_num_t io_num, relay_level_t level, bool save_state);
 
 /**
   * @brief set state of relay
@@ -83,6 +83,8 @@ relay_state_t relay_read(relay_handle_t relay_handle);
   *     - others: fail
   */
 esp_err_t relay_delete(relay_handle_t relay_handle);
+
+esp_err_t relay_toggle(relay_handle_t relay_handle);
 
 void relay_save_nvs();
 void relay_load_nvs();
