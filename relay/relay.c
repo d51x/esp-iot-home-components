@@ -132,12 +132,14 @@ esp_err_t relay_write(relay_handle_t relay_handle, relay_state_t state)
 relay_state_t relay_read(relay_handle_t relay_handle)
 {
     relay_t* relay = (relay_t*) relay_handle;
+    POINT_ASSERT(TAG, relay_handle);
     return relay->state;
 }
 
 esp_err_t relay_toggle(relay_handle_t relay_handle)
 {
     relay_t* relay = (relay_t*) relay_handle;
+    POINT_ASSERT(TAG, relay_handle);
     relay_state_t state = relay_read(relay);
     return relay_write(relay, !state);  
 }
