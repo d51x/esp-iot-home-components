@@ -196,7 +196,7 @@ esp_err_t reboot_get_handler(httpd_req_t *req)
 	
 	if ( http_get_has_params(req) == ESP_OK) {
         uint8_t st;
-        if ( http_get_key_uint8(req, "st", &st) == ESP_OK ) {
+        if ( http_get_key_uint8(req, "st", &st, 0) == ESP_OK ) {
             found = (st == 1);        
         }
     } 

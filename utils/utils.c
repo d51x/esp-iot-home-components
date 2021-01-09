@@ -15,8 +15,8 @@ const char *RESET_REASONS[ESP_RST_SDIO+1] = {
     "interrupt watchdog",
     "task watchdog",
     "other watchdogs",
-    "after exiting deep sleep mode",
-    "Brownout reset (software or hardware)",
+    "after deep sleep",
+    "Brownout reset",
     "Reset over SDIO",
 };
 
@@ -292,8 +292,7 @@ void trim(char *s){
 void rtrim( char * string, char * trim )
 {
     // делаем обрезку справа
-    int i;
-    for( i = strlen (string) - 1; i >= 0 && strchr (trim, string[i]) != NULL; i-- )
+    for( int i = strlen (string) - 1; i >= 0 && strchr (trim, string[i]) != NULL; i-- )
     {  
         // переставляем терминатор строки 
         string[i] = '\0';
@@ -316,30 +315,9 @@ long map(long x, long in_min, long in_max, long out_min, long out_max) {
 
 void systemRebootTask(void *arg)
 {
-
-	// Init the event group
-	//reboot_event_group = xEventGroupCreate();
-	
-	// Clear the bit
-	//xEventGroupClearBits(reboot_event_group, REBOOT_BIT);
-
-	
-	//for (;;)
-	//{
-		// Wait here until the bit gets set for reboot
-		//EventBits_t staBits = xEventGroupWaitBits(reboot_event_group, REBOOT_BIT, pdTRUE, pdFALSE, portMAX_DELAY);
-		
-		// Did portMAX_DELAY ever timeout, not sure so lets just check to be sure
-		//if ((staBits & REBOOT_BIT) != 0)
-		//{
-			uint32_t delay = (uint32_t)arg;
-            ESP_LOGE("OTA", "Reboot Command, Restarting within %d", delay);
-			vTaskDelay(delay / portTICK_PERIOD_MS);
-
-			esp_restart();
-		//}
-	//}
-
+    ESP_LOGE("OTA", "Reboot Command, Restarting within %d", (uint32_t)arg);
+	vTaskDelay((uint32_t)arg / portTICK_PERIOD_MS);
+    esp_restart();
 }
 
 

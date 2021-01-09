@@ -100,7 +100,7 @@ static void ledc_http_process_params(httpd_req_t *req, void *args)
                     {
                         data[i].channel = i;
                         sprintf(param, html_page_config_ledc_channel_gpio_name, i);
-                        if ( http_get_key_uint8(req, param, &data[i].pin) != ESP_OK ) 
+                        if ( http_get_key_uint8(req, param, &data[i].pin, GPIO_NUM_MAX) != ESP_OK ) 
                         {
                             ESP_LOGE(TAG, "gpio for channel %d is missing", i);
                             continue;
@@ -250,7 +250,7 @@ esp_err_t ledcontrol_get_handler(httpd_req_t *req)
             ledcontrol_channel_t *channel = ledc->channels + ch;
             long val = 0;
 
-            if ( http_get_key_long(req, "duty", &val) == ESP_OK ) 
+            if ( http_get_key_long(req, "duty", &val, 0) == ESP_OK ) 
             {
                 // channel->set_duty
                 if ( val >= 0 && val <= MAX_DUTY ) 
@@ -259,32 +259,32 @@ esp_err_t ledcontrol_get_handler(httpd_req_t *req)
                     ledc->update();
                 }
             } 
-            else if ( http_get_key_long(req, "on", &val) == ESP_OK ) 
+            else if ( http_get_key_long(req, "on", &val, 0) == ESP_OK ) 
             {
                 // channel > on
                 if ( val == 1) 
                     err = ledc->on(channel);
             } 
-            else if ( http_get_key_long(req, "off", &val) == ESP_OK ) 
+            else if ( http_get_key_long(req, "off", &val, 0) == ESP_OK ) 
             {
                 // channel > off
                 if ( val == 1) 
                     err = ledc->off(channel);
             } 
-            else if ( http_get_key_long(req, "step", &val) == ESP_OK ) 
+            else if ( http_get_key_long(req, "step", &val, 0) == ESP_OK ) 
             {
                 if ( val > 0 ) 
                     err = ledc->next_duty(channel, val);    
                 else if ( val < 0 ) 
                     err = ledc->prev_duty(channel, val*(-1));   
             } 
-            else if ( http_get_key_long(req, "fade", &val) == ESP_OK ) 
+            else if ( http_get_key_long(req, "fade", &val, 0) == ESP_OK ) 
             {
                 // channel > fade
                 long from, to, delay;
-                if ( http_get_key_long(req, "from", &from) == ESP_OK &&
-                     http_get_key_long(req, "to", &to) == ESP_OK &&
-                     http_get_key_long(req, "delay", &delay) == ESP_OK )
+                if ( http_get_key_long(req, "from", &from, 0) == ESP_OK &&
+                     http_get_key_long(req, "to", &to, 0) == ESP_OK &&
+                     http_get_key_long(req, "delay", &delay, 0) == ESP_OK )
                 {
                     err = ledc->fade( channel, from, to, delay);
                 }

@@ -202,9 +202,9 @@ static void rgbcontrol_process_params(httpd_req_t *req, void *args)
             if ( strcmp(param, rgb_param_rgb) == 0 ) 
             {
                 // продолжим обработку параметров    
-                http_get_key_uint8(req, rgb_param_red_channel, &rgb_ctrl->red.channel);
-                http_get_key_uint8(req, rgb_param_green_channel, &rgb_ctrl->green.channel);
-                http_get_key_uint8(req, rgb_param_blue_channel, &rgb_ctrl->blue.channel);
+                http_get_key_uint8(req, rgb_param_red_channel, &rgb_ctrl->red.channel, 0);
+                http_get_key_uint8(req, rgb_param_green_channel, &rgb_ctrl->green.channel, 1);
+                http_get_key_uint8(req, rgb_param_blue_channel, &rgb_ctrl->blue.channel, 2);
 
                 rgb_ctrl->red = rgb_ctrl->ledc->channels[rgb_ctrl->red.channel];
                 rgb_ctrl->green = rgb_ctrl->ledc->channels[rgb_ctrl->green.channel];
@@ -266,9 +266,9 @@ static esp_err_t http_process_rgb2(httpd_req_t *req)
 
     esp_err_t err = ESP_FAIL;
     color_rgb_t *rgb = malloc(sizeof(color_rgb_t));
-    if ( http_get_key_uint8(req, "r", &rgb->r) == ESP_OK &&
-         http_get_key_uint8(req, "g", &rgb->g) == ESP_OK &&
-         http_get_key_uint8(req, "b", &rgb->b) == ESP_OK) 
+    if ( http_get_key_uint8(req, "r", &rgb->r, 0) == ESP_OK &&
+         http_get_key_uint8(req, "g", &rgb->g, 1) == ESP_OK &&
+         http_get_key_uint8(req, "b", &rgb->b, 2) == ESP_OK) 
     {
 
         #ifdef CONFIG_RGB_EFFECTS
@@ -319,9 +319,9 @@ static esp_err_t http_process_hsv2(httpd_req_t *req)
 
     esp_err_t err = ESP_FAIL;
     color_hsv_t *hsv = malloc( sizeof(color_hsv_t));
-    if ( http_get_key_uint16(req, "h", &hsv->h) == ESP_OK &&
-            http_get_key_uint8(req, "s", &hsv->s) == ESP_OK &&
-            http_get_key_uint8(req, "v", &hsv->v) == ESP_OK) 
+    if ( http_get_key_uint16(req, "h", &hsv->h, 100) == ESP_OK &&
+            http_get_key_uint8(req, "s", &hsv->s, 100) == ESP_OK &&
+            http_get_key_uint8(req, "v", &hsv->v, 100) == ESP_OK) 
     {
         #ifdef CONFIG_RGB_EFFECTS
         effects_t *ef = (effects_t *) rgb_ctrl->effects;
@@ -359,7 +359,7 @@ static esp_err_t http_process_int(httpd_req_t *req)
     rgbcontrol_t *rgb_ctrl = (rgbcontrol_t *)ctx->args;
 
     long color;
-    esp_err_t err = http_get_key_long(req, rgb_param_val, &color);
+    esp_err_t err = http_get_key_long(req, rgb_param_val, &color, 0);
     if ( err != ESP_OK ) return err;
 
     #ifdef CONFIG_RGB_EFFECTS
