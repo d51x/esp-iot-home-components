@@ -220,6 +220,7 @@ esp_err_t ledcontrol_get_handler(httpd_req_t *req)
     ip/ledc?ch=<channel>&off=1
     ip/ledc?ch=<channel>&step=<step>   // next duty
     ip/ledc?ch=<channel>&fade=1&from=<duty_from>&to=<duty_to>&delay=<duty_delay>
+    TODO: ip/ledc?ch=<channel>&fade-to=<value> // fade to duty from old duty with fixed delay
     ip/ledc?allon=1
     ip/ledc?alloff=1
     ip/ledc?ch=<channel> - print channel duty
@@ -288,6 +289,12 @@ esp_err_t ledcontrol_get_handler(httpd_req_t *req)
                 {
                     err = ledc->fade( channel, from, to, delay);
                 }
+            }
+            else if ( http_get_key_long(req, "fade-to", &val, 0) == ESP_OK ) 
+            {
+                // channel > fade
+                long from = ledc->get_duty( channel);
+                err = ledc->fade( channel, from, val, 30);
             }
 
             if ( err == ESP_OK )
