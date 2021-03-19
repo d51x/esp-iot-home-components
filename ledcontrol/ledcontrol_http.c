@@ -256,21 +256,38 @@ esp_err_t ledcontrol_get_handler(httpd_req_t *req)
                 // channel->set_duty
                 if ( val >= 0 && val <= MAX_DUTY ) 
                 {
+                    #ifndef CONFIG_LED_SMOOTH_DUTY
                     err = ledc->set_duty( channel, val );
                     ledc->update();
+                    #else
+                    long from = ledc->get_duty( channel);
+                    err = ledc->fade( channel, from, val, LEDCONTROL_SMOOTH_DUTY_STEP_TIME_MS);
+                    #endif
                 }
             } 
             else if ( http_get_key_long(req, "on", &val, 0) == ESP_OK ) 
             {
                 // channel > on
                 if ( val == 1) 
+                {
+                    #ifndef CONFIG_LED_SMOOTH_DUTY
                     err = ledc->on(channel);
+                    #else
+                    err = ledc->fade(channel, ledc->get_duty( channel), MAX_DUTY, LEDCONTROL_SMOOTH_DUTY_STEP_TIME_MS);
+                    #endif
+                }
             } 
             else if ( http_get_key_long(req, "off", &val, 0) == ESP_OK ) 
             {
                 // channel > off
                 if ( val == 1) 
+                {
+                    #ifndef CONFIG_LED_SMOOTH_DUTY
                     err = ledc->off(channel);
+                    #else
+                    err = ledc->fade(channel, ledc->get_duty( channel), 0, LEDCONTROL_SMOOTH_DUTY_STEP_TIME_MS);
+                    #endif
+                }
             } 
             else if ( http_get_key_long(req, "step", &val, 0) == ESP_OK ) 
             {
@@ -289,12 +306,6 @@ esp_err_t ledcontrol_get_handler(httpd_req_t *req)
                 {
                     err = ledc->fade( channel, from, to, delay);
                 }
-            }
-            else if ( http_get_key_long(req, "fade-to", &val, 0) == ESP_OK ) 
-            {
-                // channel > fade
-                long from = ledc->get_duty( channel);
-                err = ledc->fade( channel, from, val, 30);
             }
 
             if ( err == ESP_OK )

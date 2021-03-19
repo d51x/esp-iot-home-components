@@ -323,6 +323,21 @@ menu "Project config"
             default n
             help
                 Enable LED Controller
+            
+            config LED_SMOOTH_DUTY    
+                bool "Enable Smooth Duty Change"
+                default y
+                depends on LED_CONTROLLER
+                help
+                    Enable Smooth Duty Change
+
+            config LED_SMOOTH_DUTY_STEP_TIME_MS    
+                int "Smooth duty change step time msec"
+                range 15 50
+                default 30
+                depends on LED_CONTROLLER
+                help
+                    Smooth duty change step time msec
 
             config LED_CHANNELS_COUNT
                 int "Led controller channels count"

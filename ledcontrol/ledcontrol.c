@@ -470,8 +470,10 @@ uint8_t ledcontrol_init_channels(ledcontrol_channel_t **channels)
     if ( err != ESP_OK )
     {
         // ошибка чтения из nvs, используем дефолтные значения
-        ESP_LOGW(TAG, LOG_FMT("use default values from Kconfig"));
+        
         _channels_count = LED_CHANNELS_COUNT;
+        ESP_LOGW(TAG, LOG_FMT("use default values from Kconfig: %d"), _channels_count);
+        
         if ( LED_CHANNELS_COUNT > 0 )
         {
             //free(*channels);
@@ -485,9 +487,10 @@ uint8_t ledcontrol_init_channels(ledcontrol_channel_t **channels)
                 (*channels)[i].bright_tbl = TBL_32B;
 
                 //char *s = (*channels)[i].name;
-                (*channels)[i].name = (char *)realloc((*channels)[i].name, 12);
-                sprintf((*channels)[i].name, "Channel %02d", i);
-                //(*channels)[i].name = s;                
+                //(*channels)[i].name = (char *)realloc((*channels)[i].name, 12);
+                (*channels)[i].name = (char *)calloc(16, sizeof(char));
+                snprintf((*channels)[i].name, 16, "Channel %02d:", i);
+                    //(*channels)[i].name = s;                
             }
 
             #ifdef CONFIG_LED_CHANNEL0_GPIO

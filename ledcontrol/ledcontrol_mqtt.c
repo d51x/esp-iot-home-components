@@ -27,8 +27,14 @@ static esp_err_t ledcontrol_set_duty_update(ledcontrol_mqtt_t *p, uint8_t duty)
         ledcontrol_handle_t dev_h = p->dev_h;
         ledcontrol_t *ledc = (ledcontrol_t *)dev_h;
         ledcontrol_channel_t *ch = ledc->channels + p->channel;
-        err = ledc->set_duty( ch, duty );
-        ledc->update();
+        
+        #ifndef CONFIG_LED_SMOOTH_DUTY
+            err = ledc->set_duty( ch, duty );
+            ledc->update();
+        #else
+            long from = ledc->get_duty( ch );
+            err = ledc->fade( ch, from, duty, LEDCONTROL_SMOOTH_DUTY_STEP_TIME_MS);
+        #endif        
     } 
     return err;
 }
